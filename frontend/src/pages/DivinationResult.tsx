@@ -29,7 +29,6 @@ const DivinationResult: React.FC = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState<DivinationResult | null>(null);
-  const [showAIInterpretation, setShowAIInterpretation] = useState(false);
   const [isGettingAIInterpretation, setIsGettingAIInterpretation] = useState(false);
 
   // 从路由状态获取占卜信息
@@ -71,7 +70,7 @@ const DivinationResult: React.FC = () => {
   };
 
   // 生成模拟占卜结果
-  const generateMockResult = (method: string) => {
+  const generateMockResult = (_method: string) => {
     const hexagrams = [
       { name: '乾', number: 1, upper: '乾', lower: '乾', guaci: '乾：元，亨，利，贞。' },
       { name: '坤', number: 2, upper: '坤', lower: '坤', guaci: '坤：元，亨，利牝马之贞。' },
@@ -139,7 +138,6 @@ ${result.result.name}卦（第${result.result.number}卦），上${result.result
       `;
 
       setResult({ ...result, aiInterpretation });
-      setShowAIInterpretation(true);
     } catch (error) {
       console.error('获取AI解读失败:', error);
     } finally {

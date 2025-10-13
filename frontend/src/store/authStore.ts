@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { AuthService } from '@/services/auth';
-import { AuthState, User, LoginRequest, RegisterRequest } from '@/types/auth';
+import { AuthState, LoginRequest, RegisterRequest } from '@/types/auth';
 
 interface AuthStore extends AuthState {
   // Actions
@@ -14,7 +14,7 @@ interface AuthStore extends AuthState {
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // Initial state
       user: null,
       token: null,

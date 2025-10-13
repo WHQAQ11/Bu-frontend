@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { LoginRequest, RegisterRequest, AuthResponse } from '@/types/auth';
+import { LoginRequest, RegisterRequest, AuthResponse, User } from '@/types/auth';
 
 // 创建 axios 实例
 const api = axios.create({

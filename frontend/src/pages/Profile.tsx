@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { TaiJi, BaGua, Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
+import { TaiJi, Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
 
 interface DivinationRecord {
   id: number;
@@ -190,7 +190,7 @@ const Profile: React.FC = () => {
               </span>
             </div>
             <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-golden-400 rounded-full flex items-center justify-center">
-              <TaiJi size="xs" />
+              <TaiJi size="sm" />
             </div>
           </div>
           <div className="flex-1">
@@ -340,12 +340,13 @@ const Profile: React.FC = () => {
       ) : (
         <div className="space-y-4">
           {divinationHistory.map((record) => (
-            <MysticalAura
+            <div
               key={record.id}
-              className="bg-midnight-800/40 backdrop-blur-sm rounded-xl p-6 border border-primary-500/20 cursor-pointer hover:border-golden-400/50 transition-all duration-300"
               onClick={() => setSelectedRecord(record)}
+              className="cursor-pointer"
             >
-              <div className="flex items-center justify-between">
+              <MysticalAura className="bg-midnight-800/40 backdrop-blur-sm rounded-xl p-6 border border-primary-500/20 hover:border-golden-400/50 transition-all duration-300">
+                <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-mystical-purple to-mystical-indigo rounded-full flex items-center justify-center">
                     <span className="text-xl">{record.result.name}</span>
@@ -378,8 +379,9 @@ const Profile: React.FC = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </div>
-              </div>
-            </MysticalAura>
+                </div>
+              </MysticalAura>
+            </div>
           ))}
         </div>
       )}
@@ -478,7 +480,7 @@ const Profile: React.FC = () => {
       <MysticalAura className="bg-midnight-800/40 backdrop-blur-sm rounded-xl p-8 border border-primary-500/20">
         <h3 className="text-xl font-semibold text-midnight-100 mb-6">最近占卜趋势</h3>
         <div className="grid grid-cols-7 gap-2">
-          {['一', '二', '三', '四', '五', '六', '日'].map((day, index) => (
+          {['一', '二', '三', '四', '五', '六', '日'].map((day, _index) => (
             <div key={day} className="text-center space-y-2">
               <p className="text-xs text-midnight-400">{day}</p>
               <div className="h-20 bg-midnight-700 rounded-lg flex items-end justify-center">
