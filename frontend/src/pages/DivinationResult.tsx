@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { TaiJi, BaGua, Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
+import { Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
 import { ClassicBaguaDiagram } from '@/components/ui/ClassicBagua';
 
 interface DivinationResult {
@@ -413,5 +413,6 @@ ${result.result.name}卦（第${result.result.number}卦），上${result.result
     </div>
   );
 };
+
 
 export default DivinationResult;
