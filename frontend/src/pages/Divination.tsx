@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
-import { TaiJi, BaGua, Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
+import { TaiJi, Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
 
 interface QuestionCategory {
   id: string;
@@ -431,5 +431,6 @@ const Divination: React.FC = () => {
     </div>
   );
 };
+
 
 export default Divination;
