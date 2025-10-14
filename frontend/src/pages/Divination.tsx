@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { TaiJi, Stars, MysticalAura } from '@/components/ui/TrigramSymbol';
+import DivinationAnimation, { DivinationResult } from '@/components/ui/DivinationAnimation';
 
 interface QuestionCategory {
   id: string;
@@ -31,7 +32,8 @@ const Divination: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [question, setQuestion] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
+  const [showAnimation, setShowAnimation] = useState(false);
 
   // 从URL参数获取预设的占卜方法
   useEffect(() => {
@@ -146,32 +148,28 @@ const Divination: React.FC = () => {
       return;
     }
 
-    setIsSubmitting(true);
+    // 显示动画而不是简单的loading
+    setShowAnimation(true);
+  };
 
-    try {
-      // 这里将来会调用后端API
-      // const response = await divinationAPI.calculate({
-      //   method: selectedMethod,
-      //   question: question.trim(),
-      //   category: selectedCategory
-      // });
+  // 处理动画完成
+  const handleAnimationComplete = (result: DivinationResult) => {
+    setShowAnimation(false);
 
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    // 跳转到占卜结果页面，传递动画结果
+    navigate('/divination/result', {
+      state: {
+        method: result.method,
+        question: result.question,
+        category: result.category,
+        divinationResult: result // 传递完整的占卜结果
+      }
+    });
+  };
 
-      // 跳转到占卜结果页面
-      navigate('/divination/result', {
-        state: {
-          method: selectedMethod,
-          question: question.trim(),
-          category: selectedCategory
-        }
-      });
-    } catch (error) {
-      console.error('占卜失败:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+  // 关闭动画
+  const handleCloseAnimation = () => {
+    setShowAnimation(false);
   };
 
   // 渲染步骤指示器
@@ -428,6 +426,18 @@ const Divination: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* 占卜动画 */}
+      {showAnimation && selectedMethod && (
+        <DivinationAnimation
+          isOpen={showAnimation}
+          onClose={handleCloseAnimation}
+          onComplete={handleAnimationComplete}
+          question={question.trim()}
+          method={selectedMethod as 'liuyao' | 'meihua' | 'ai'}
+          category={selectedCategory || undefined}
+        />
+      )}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import Profile from '@/pages/Profile';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import BaguaPage from '@/pages/BaguaPage';
+import AnimationDemo from '@/pages/AnimationDemo';
 import { useAuthStore } from '@/store/authStore';
 import './App.css';
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
+              <Route path="/animation-demo" element={<AnimationDemo />} />
             </Routes>
           </Layout>
         } />
