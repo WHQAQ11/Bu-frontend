@@ -41,7 +41,6 @@ const BAGUA_DATA = [
 export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
   onComplete,
   question,
-  method,
   category
 }) => {
   const [stage, setStage] = useState<MeiHuaStage>(MeiHuaStage.TIME_DISPLAY);
@@ -75,7 +74,7 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
   }, []);
 
   // 将时间文字转换为数字
-  const convertTimeToNumbers = useCallback((timeInfo: TimeInfo): { [key: string]: number } => {
+  const convertTimeToNumbers = useCallback((_timeInfo: TimeInfo): { [key: string]: number } => {
     return {
       year: 3,  // 壬寅年的寅
       month: 8, // 八月
@@ -291,7 +290,7 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
           <h3 className="text-xl font-semibold text-blue-400">时间化数</h3>
           <div className="space-y-4">
             <div className="flex justify-center items-center space-x-4">
-              {Object.entries(timeInfo).map(([key, value], index) => (
+              {Object.entries(timeInfo).map(([key, value]) => (
                 <div key={key} className="text-center">
                   <div className={`transition-all duration-1000 ${
                     convertedNumbers[key] ? 'opacity-50' : ''

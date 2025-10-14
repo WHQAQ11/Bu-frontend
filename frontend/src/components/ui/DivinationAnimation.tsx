@@ -25,7 +25,7 @@ export interface DivinationResult {
 }
 
 // 动画组件接口
-interface AnimationComponentProps {
+export interface AnimationComponentProps {
   onComplete: (result: DivinationResult) => void;
   question: string;
   method: DivinationMethod;

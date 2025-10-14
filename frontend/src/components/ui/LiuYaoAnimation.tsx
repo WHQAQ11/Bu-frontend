@@ -27,7 +27,6 @@ enum LiuYaoStage {
 export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   onComplete,
   question,
-  method,
   category
 }) => {
   const [stage, setStage] = useState<LiuYaoStage>(LiuYaoStage.COIN_TOSS);
@@ -150,20 +149,42 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
           animation: isAnimating ? 'coinFlip 2.5s ease-in-out' : 'none'
         }}
       >
-        <div className="relative w-20 h-20">
-          {/* 铜钱主体 */}
-          <div className={`w-full h-full rounded-full border-4 border-amber-900 shadow-lg flex items-center justify-center text-2xl font-bold transition-colors duration-500 ${
-            coin.isHeads ? 'bg-amber-100 text-amber-900' : 'bg-amber-800 text-amber-100'
+        <div className="relative w-20 h-20 chinese-coin-container">
+          {/* 铜钱主体 - 圆形方孔 */}
+          <div className={`w-full h-full rounded-full border-2 border-amber-900 shadow-lg flex items-center justify-center transition-all duration-500 ${
+            coin.isHeads ? 'bg-gradient-to-br from-amber-600 to-amber-800' : 'bg-gradient-to-br from-amber-700 to-amber-900'
           }`}>
-            {coin.isHeads ? (
-              <span className="text-4xl">⚪</span> // 文字面（简化为圆圈）
-            ) : (
-              <span className="text-4xl">🟢</span> // 图案面（简化为方块）
+            {/* 方孔 */}
+            <div className="absolute w-6 h-6 bg-midnight-900 border border-amber-800/50"></div>
+
+            {/* 正面文字 - 通宝 */}
+            {coin.isHeads && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="text-amber-100 font-bold text-sm leading-none" style={{ fontFamily: 'serif' }}>通寶</div>
+                </div>
+              </div>
+            )}
+
+            {/* 背面纹饰 - 简单的传统纹路 */}
+            {!coin.isHeads && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-16 h-16">
+                  {/* 背面装饰纹路 */}
+                  <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-1 h-3 bg-amber-600/50"></div>
+                  <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-3 bg-amber-600/50"></div>
+                  <div className="absolute left-1 top-1/2 transform -translate-y-1/2 w-3 h-1 bg-amber-600/50"></div>
+                  <div className="absolute right-1 top-1/2 transform -translate-y-1/2 w-3 h-1 bg-amber-600/50"></div>
+                </div>
+              </div>
             )}
           </div>
 
           {/* 金属光泽效果 */}
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-amber-400/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-amber-300/30 to-transparent pointer-events-none"></div>
+
+          {/* 边缘高光 */}
+          <div className="absolute inset-0 rounded-full border border-amber-400/20 pointer-events-none"></div>
         </div>
       </div>
     );

@@ -394,6 +394,53 @@
   100% { transform: rotate(360deg); }
 }
 
+/* 中国铜钱样式 */
+.chinese-coin-container {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.chinese-coin-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #b87333, #cd7f32, #b87333);
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.chinese-coin-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), transparent 40%);
+  pointer-events: none;
+}
+
+/* 铜钱旋转时增强效果 */
+.animate-coinFlip .chinese-coin-container {
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* 铜钱光泽效果 */
+@keyframes metalShine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.chinese-coin-container:hover::after {
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0.4) 70%,
+    transparent 100%);
+  animation: metalShine 2s linear infinite;
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
   .animate-coinFlip {

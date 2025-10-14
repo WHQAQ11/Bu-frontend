@@ -32,7 +32,7 @@ const Divination: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
   const [question, setQuestion] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
 
   // 从URL参数获取预设的占卜方法
@@ -435,7 +435,7 @@ const Divination: React.FC = () => {
           onComplete={handleAnimationComplete}
           question={question.trim()}
           method={selectedMethod as 'liuyao' | 'meihua' | 'ai'}
-          category={selectedCategory}
+          category={selectedCategory || undefined}
         />
       )}
     </div>
