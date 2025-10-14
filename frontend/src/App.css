@@ -201,3 +201,206 @@
     0 1px 3px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
+
+/* 占卜动画专用样式 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes coinFlip {
+  0% {
+    transform: rotateY(0deg) translate(var(--x, 0px), var(--y, 0px));
+  }
+  25% {
+    transform: rotateY(360deg) translate(var(--x, 0px), var(--y, 0px)) scale(1.1);
+  }
+  50% {
+    transform: rotateY(720deg) translate(var(--x, 0px), var(--y, 0px)) scale(1.2);
+  }
+  75% {
+    transform: rotateY(1080deg) translate(var(--x, 0px), var(--y, 0px)) scale(1.1);
+  }
+  100% {
+    transform: rotateY(1440deg) translate(var(--x, 0px), var(--y, 0px)) scale(1);
+  }
+}
+
+@keyframes yaoLineDraw {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes numberFlow {
+  0% {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes trigramRotate {
+  from {
+    transform: rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes timeTransform {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.8);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* 占卜动画工具类 */
+.animate-fadeIn {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-coinFlip {
+  animation: coinFlip 2.5s ease-in-out;
+}
+
+.animate-yaoDraw {
+  animation: yaoLineDraw 1s ease-out;
+}
+
+.animate-numberFlow {
+  animation: numberFlow 1.5s ease-out;
+}
+
+.animate-trigramRotate {
+  animation: trigramRotate 2s ease-out;
+}
+
+.animate-timeTransform {
+  animation: timeTransform 1s ease-in-out;
+}
+
+/* 六爻占卜专用背景 */
+.bagua-bg-stars {
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bagua-bg-stars::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, rgba(255, 215, 0, 0.3), transparent),
+    radial-gradient(2px 2px at 40px 70px, rgba(255, 215, 0, 0.2), transparent),
+    radial-gradient(1px 1px at 90px 40px, rgba(255, 215, 0, 0.4), transparent),
+    radial-gradient(1px 1px at 130px 80px, rgba(255, 215, 0, 0.3), transparent);
+  background-size: 200px 200px;
+  animation: sparkle 10s linear infinite;
+}
+
+@keyframes sparkle {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(-200px) translateY(-200px); }
+}
+
+/* 梅花易数专用背景 */
+.meihua-bg-flow {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.meihua-bg-flow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg,
+    transparent 30%,
+    rgba(0, 191, 255, 0.1) 50%,
+    transparent 70%);
+  animation: flow 8s linear infinite;
+}
+
+@keyframes flow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .animate-coinFlip {
+    animation-duration: 2s;
+  }
+
+  .animate-trigramRotate {
+    animation-duration: 1.5s;
+  }
+}

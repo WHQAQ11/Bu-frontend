@@ -11,16 +11,16 @@ interface Trigram {
   pattern: TrigramPattern;
 }
 
-// 先天八卦顺序（从正南/上方开始，顺时针）
+// 后天八卦顺序（从正南/上方开始，顺时针）- 与 TrigramSymbol.tsx 保持一致
 const trigramsData: Trigram[] = [
-  { name: '乾', pattern: [1, 1, 1] }, // 南 (上)
-  { name: '兑', pattern: [0, 1, 1] }, // 东南
-  { name: '离', pattern: [1, 0, 1] }, // 东 (左)
-  { name: '震', pattern: [0, 0, 1] }, // 东北
-  { name: '坤', pattern: [0, 0, 0] }, // 北 (下)
-  { name: '艮', pattern: [1, 0, 0] }, // 西北
-  { name: '坎', pattern: [0, 1, 0] }, // 西 (右)
-  { name: '巽', pattern: [1, 1, 0] }, // 西南
+  { name: '离', pattern: [1, 0, 1] }, // 南 (上)
+  { name: '坤', pattern: [0, 0, 0] }, // 西南
+  { name: '兑', pattern: [0, 1, 1] }, // 西
+  { name: '乾', pattern: [1, 1, 1] }, // 西北
+  { name: '坎', pattern: [0, 1, 0] }, // 北 (下)
+  { name: '艮', pattern: [1, 0, 0] }, // 东北
+  { name: '震', pattern: [0, 0, 1] }, // 东
+  { name: '巽', pattern: [1, 1, 0] }, // 东南
 ];
 
 // --- 2. 经典太极图组件 ---
