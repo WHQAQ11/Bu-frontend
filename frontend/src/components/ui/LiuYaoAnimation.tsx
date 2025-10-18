@@ -15,6 +15,18 @@ interface CoinResult {
   y: number;
 }
 
+/*
+传统六爻占卜铜钱卦法说明：
+- 铜钱有文字面为"背"，图案面为"正"
+- 三枚铜钱投掷结果：
+  * 三背（零正三背）：老阳（9）- 动爻
+  * 一正二背：少阴（8）- 静爻
+  * 二正一背：少阳（7）- 静爻
+  * 三正（三正零背）：老阴（6）- 动爻
+
+此规则遵循京氏易传的传统占卜方法，与后世通行的规则一致。
+*/
+
 // 爻线信息接口
 interface YaoInfo {
   value: number; // 6(老阴), 7(少阳), 8(少阴), 9(老阳)
@@ -58,20 +70,20 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
     }));
   }, []);
 
-  // 根据铜钱结果计算爻值
+  // 根据铜钱结果计算爻值（遵循传统六爻占卜古法）
   const calculateYaoValue = useCallback(
     (coinResult: CoinResult[]): { value: number; isChanging: boolean } => {
       const headsCount = coinResult.filter((coin) => coin.isHeads).length;
 
       switch (headsCount) {
-        case 0: // 三正 - 老阴
-          return { value: 6, isChanging: true };
-        case 1: // 一背二正 - 少阳
-          return { value: 7, isChanging: false };
-        case 2: // 二背一正 - 少阴
-          return { value: 8, isChanging: false };
-        case 3: // 三背 - 老阳
+        case 0: // 三背（零正三背）- 老阳（9）
           return { value: 9, isChanging: true };
+        case 1: // 一正二背 - 少阴（8）
+          return { value: 8, isChanging: false };
+        case 2: // 二正一背 - 少阳（7）
+          return { value: 7, isChanging: false };
+        case 3: // 三正（三正零背）- 老阴（6）
+          return { value: 6, isChanging: true };
         default:
           return { value: 7, isChanging: false };
       }

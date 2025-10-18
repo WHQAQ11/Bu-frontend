@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { HexagramInfo, YaoInfo } from "../utils/iChingUtils";
+import {
+  HexagramInfo,
+  getPrimaryInterpretation,
+  InterpretationResult
+} from "../utils/iChingUtils";
 import Layout from "@/components/Layout";
 
 // 扩展占卜结果接口
@@ -102,10 +106,16 @@ const ResultPage: React.FC = () => {
     );
   }
 
-  const { benGuaInfo, bianGuaInfo, changingLineIndexes, question, category } =
+  const { benGuaInfo, bianGuaInfo, changingLineIndexes, question, category, originalHexagram } =
     resultData;
-  const primaryChangingLine =
-    changingLineIndexes.length > 0 ? changingLineIndexes[0] : -1;
+
+  // 计算本次占卜的核心解读
+  const coreInterpretation: InterpretationResult = getPrimaryInterpretation(
+    benGuaInfo,
+    bianGuaInfo,
+    changingLineIndexes,
+    originalHexagram
+  );
 
   return (
     <Layout>
@@ -155,51 +165,114 @@ const ResultPage: React.FC = () => {
             )}
           </div>
 
-          {/* 主要解读内容 */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* 左侧 - 本卦信息 */}
-            <div className="space-y-6">
-              <div className="bg-midnight-800/50 rounded-xl p-6 border border-amber-500/30">
-                <h3 className="text-xl font-bold text-amber-400 mb-4 text-center">
-                  {benGuaInfo.name}
-                </h3>
-                <div className="text-midnight-300 text-center mb-4">
-                  <span className="text-sm">本卦</span>
+          {/* 核心解读区：最醒目位置显示 */}
+          <div className="mb-12">
+            <div className="bg-gradient-to-br from-amber-900/60 to-midnight-800/60 rounded-2xl p-8 border border-amber-500/40 shadow-2xl">
+              <div className="text-center space-y-6">
+                <div className="flex items-center justify-center space-x-3">
+                  <div className="w-12 h-12 bg-amber-400/30 rounded-full flex items-center justify-center">
+                    <span className="text-2xl">✨</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-amber-300">
+                    核心指引
+                  </h2>
+                </div>
+
+                <div className="bg-midnight-900/40 rounded-xl p-6 border border-amber-500/20">
+                  <h3 className="text-xl font-semibold text-amber-200 mb-4">
+                    {coreInterpretation.title}
+                  </h3>
+                  <p className="text-3xl font-serif text-amber-100 leading-relaxed quote">
+                    "{coreInterpretation.text}"
+                  </p>
+                  {coreInterpretation.yaoPosition && (
+                    <p className="text-sm text-amber-300 mt-4">
+                      爻位：{coreInterpretation.yaoPosition}
+                    </p>
+                  )}
+                </div>
+
+                <div className="text-sm text-amber-300 space-y-2">
+                  <p>📖 这是对您问题的直接回答</p>
+                  <p>🎯 请重点关注其中的指引和建议</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* AI智慧解读区：中等突出 */}
+          <div className="mb-12">
+            <div className="bg-gradient-to-br from-mystical-purple/30 to-midnight-800/50 rounded-xl p-6 border border-mystical-purple/30">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-mystical-purple/30 rounded-full flex items-center justify-center">
+                    <span className="text-lg">🧠</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-mystical-purple">
+                    智慧解读
+                  </h3>
+                </div>
+
+                <div className="text-midnight-100 leading-relaxed">
+                  <p className="text-lg">
+                    根据"{coreInterpretation.text}"这句核心指引，
+                    针对您关于<span className="text-amber-300 font-medium">{question}</span>的问题：
+                  </p>
+                  <div className="mt-4 p-4 bg-midnight-700/30 rounded-lg border-l-4 border-mystical-purple">
+                    <p className="text-midnight-200">
+                      这个占卜结果提示您要密切关注事物发展的关键节点。
+                      {coreInterpretation.sourceGua === 'ben' ? '当前的状况' : '未来的发展'}需要您以智慧和耐心来应对。
+                      建议您深入思考这句指引的含义，结合实际情况做出决策。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 参考信息区：作为背景信息 */}
+          <div className="border-t border-midnight-700 pt-8">
+            <h3 className="text-xl font-semibold text-midnight-400 mb-6 text-center">
+              卦象详情参考
+            </h3>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* 本卦信息 */}
+              <div className="bg-midnight-800/30 rounded-xl p-6 border border-midnight-700">
+                <div className="text-center mb-4">
+                  <h4 className="text-lg font-bold text-amber-400 mb-2">
+                    {benGuaInfo.name}
+                  </h4>
+                  <span className="text-sm text-midnight-400">本卦 (基础状况)</span>
                 </div>
 
                 {/* 本卦卦辞 */}
-                <div className="bg-midnight-700/50 rounded-lg p-4">
-                  <h4 className="text-sm font-medium text-amber-300 mb-2">
-                    【卦辞】
-                  </h4>
-                  <p className="text-midnight-100 leading-relaxed">
+                <div className="bg-midnight-700/30 rounded-lg p-4 mb-4">
+                  <h5 className="text-sm font-medium text-amber-300 mb-2">卦辞</h5>
+                  <p className="text-midnight-200 text-sm leading-relaxed">
                     {benGuaInfo.guaCi}
                   </p>
                 </div>
 
                 {/* 爻图显示 */}
-                <div className="flex flex-col-reverse items-center space-y-reverse space-y-2 py-4">
+                <div className="flex flex-col-reverse items-center space-y-reverse space-y-1">
                   {resultData.originalHexagram.map((value, index) => {
-                    const yaoInfo: YaoInfo = {
-                      value,
-                      isChanging: changingLineIndexes.includes(index),
-                    };
+                    const isChanging = changingLineIndexes.includes(index);
                     const isYang = [7, 9].includes(value);
-                    const symbolType = isYang ? "yang" : "yin";
 
                     return (
                       <div
                         key={index}
-                        className="w-32 h-2 flex items-center justify-center"
+                        className="w-24 h-1.5 flex items-center justify-center"
                       >
                         <div
-                          className={`w-full h-full rounded ${
-                            symbolType === "yang"
-                              ? "bg-gradient-to-r from-amber-500 to-amber-700"
-                              : "bg-gradient-to-r from-midnight-600 to-midnight-800"
+                          className={`w-full h-full rounded-full ${
+                            isYang
+                              ? "bg-gradient-to-r from-amber-500 to-amber-600"
+                              : "bg-gradient-to-r from-midnight-600 to-midnight-700"
                           } ${
-                            yaoInfo.isChanging
-                              ? "ring-2 ring-red-500 ring-opacity-50"
+                            isChanging
+                              ? "ring-2 ring-red-400 ring-opacity-60 shadow-red-400/30"
                               : ""
                           }`}
                         />
@@ -207,118 +280,64 @@ const ResultPage: React.FC = () => {
                     );
                   })}
                 </div>
-              </div>
 
-              {/* 动爻爻辞 */}
-              {primaryChangingLine >= 0 && (
-                <div className="bg-red-900/20 rounded-xl p-6 border border-red-500/30">
-                  <h4 className="text-lg font-bold text-red-400 mb-3">
-                    第 {primaryChangingLine + 1} 爻
-                  </h4>
-                  <div className="text-red-200">
-                    <p className="text-sm leading-relaxed">
-                      {benGuaInfo.yaoCi[primaryChangingLine]}
-                    </p>
-                  </div>
-                  <p className="text-xs text-red-300 mt-2">
-                    动爻预示着事物发展的关键转折点
+                {changingLineIndexes.length > 0 && (
+                  <p className="text-xs text-midnight-400 mt-3 text-center">
+                    动爻：第{changingLineIndexes.map(i => i + 1).join('、')}爻
                   </p>
-                </div>
-              )}
-            </div>
-
-            {/* 中间 - 核心启示 */}
-            <div className="space-y-6">
-              <div className="bg-gradient-to-br from-amber-900/50 to-midnight-800/50 rounded-xl p-6 border border-amber-500/30">
-                <h3 className="text-2xl font-bold text-amber-400 mb-6 text-center">
-                  核心启示
-                </h3>
-
-                <div className="text-center space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-amber-400/20 rounded-full flex items-center justify-center">
-                    <span className="text-2xl">🎯</span>
-                  </div>
-
-                  {primaryChangingLine >= 0 ? (
-                    <div className="space-y-3">
-                      <h4 className="text-lg font-medium text-amber-300">
-                        动爻解读
-                      </h4>
-                      <p className="text-midnight-100 text-lg leading-relaxed">
-                        {benGuaInfo.yaoCi[primaryChangingLine]}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-midnight-100 text-lg leading-relaxed">
-                      本次占卜显示无动爻，意味着当前状况相对稳定，
-                      建议保持现状，顺势而为。
-                    </p>
-                  )}
-                </div>
+                )}
               </div>
-            </div>
 
-            {/* 右侧 - 变卦信息 */}
-            {bianGuaInfo && (
-              <div className="space-y-6">
-                <div className="bg-midnight-800/50 rounded-xl p-6 border border-red-500/30">
-                  <h3 className="text-xl font-bold text-red-400 mb-4 text-center">
-                    {bianGuaInfo.name}
-                  </h3>
-                  <div className="text-midnight-300 text-center mb-4">
-                    <span className="text-sm">变卦</span>
+              {/* 变卦信息 */}
+              {bianGuaInfo && (
+                <div className="bg-midnight-800/30 rounded-xl p-6 border border-midnight-700">
+                  <div className="text-center mb-4">
+                    <h4 className="text-lg font-bold text-red-400 mb-2">
+                      {bianGuaInfo.name}
+                    </h4>
+                    <span className="text-sm text-midnight-400">变卦 (发展趋势)</span>
                   </div>
 
                   {/* 变卦卦辞 */}
-                  <div className="bg-midnight-700/50 rounded-lg p-4">
-                    <h4 className="text-sm font-medium text-red-300 mb-2">
-                      【卦辞】
-                    </h4>
-                    <p className="text-midnight-100 leading-relaxed">
+                  <div className="bg-midnight-700/30 rounded-lg p-4 mb-4">
+                    <h5 className="text-sm font-medium text-red-300 mb-2">卦辞</h5>
+                    <p className="text-midnight-200 text-sm leading-relaxed">
                       {bianGuaInfo.guaCi}
                     </p>
                   </div>
 
                   {/* 变卦爻图显示 */}
-                  <div className="flex flex-col-reverse items-center space-y-reverse space-y-2 py-4">
+                  <div className="flex flex-col-reverse items-center space-y-reverse space-y-1">
                     {resultData.transformedHexagram?.map((value, index) => {
                       const isYang = [7, 9].includes(value);
-                      const symbolType = isYang ? "yang" : "yin";
 
                       return (
                         <div
                           key={index}
-                          className="w-32 h-2 flex items-center justify-center"
+                          className="w-24 h-1.5 flex items-center justify-center"
                         >
                           <div
-                            className={`w-full h-full rounded ${
-                              symbolType === "yang"
-                                ? "bg-gradient-to-r from-red-500 to-red-700"
-                                : "bg-gradient-to-r from-midnight-600 to-midnight-800"
+                            className={`w-full h-full rounded-full ${
+                              isYang
+                                ? "bg-gradient-to-r from-red-500 to-red-600"
+                                : "bg-gradient-to-r from-midnight-600 to-midnight-700"
                             }`}
                           />
                         </div>
                       );
                     })}
                   </div>
-                </div>
 
-                {/* 变化说明 */}
-                <div className="text-center">
-                  <p className="text-sm text-midnight-400">
-                    从
-                    <span className="text-amber-400 font-medium">
-                      {benGuaInfo.name}
-                    </span>
-                    到
-                    <span className="text-red-400 font-medium">
-                      {bianGuaInfo.name}
-                    </span>
-                    的转化
-                  </p>
+                  <div className="text-center mt-3">
+                    <p className="text-xs text-midnight-400">
+                      {changingLineIndexes.length > 0
+                        ? `由${benGuaInfo.name}变化而来`
+                        : "与本卦相同"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* 底部操作区域 */}
