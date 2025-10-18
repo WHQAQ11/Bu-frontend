@@ -4,6 +4,7 @@ import {
   DivinationResult,
 } from "./DivinationAnimation";
 import YaoSymbol from "./YaoSymbol";
+import { getHexagramInfo } from "../../utils/iChingUtils";
 
 // 铜钱结果接口
 interface CoinResult {
@@ -38,6 +39,10 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   const [coins, setCoins] = useState<CoinResult[]>([]);
   const [yaoResults, setYaoResults] = useState<YaoInfo[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // 卦名状态
+  const [benGuaName, setBenGuaName] = useState<string>("");
+  const [bianGuaName, setBianGuaName] = useState<string>("");
 
   // 生成随机铜钱结果
   const generateCoinResult = useCallback((): CoinResult[] => {
@@ -116,6 +121,27 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   // 处理变卦完成
   useEffect(() => {
     if (stage === LiuYaoStage.TRANSFORMATION) {
+      // 计算本卦和变卦的卦名
+      if (yaoResults.length === 6) {
+        // 计算本卦卦名
+        const benGuaInfo = getHexagramInfo(yaoResults);
+        setBenGuaName(benGuaInfo?.name || "未知卦");
+
+        // 计算变卦卦名
+        const transformedYaoResults = yaoResults.map((yao) => {
+          if (yao.isChanging) {
+            return {
+              ...yao,
+              value: yao.value === 6 ? 9 : 6, // 老阴变老阳，老阳变老阴
+              isChanging: false, // 变卦后不再是动爻
+            };
+          }
+          return yao;
+        });
+        const bianGuaInfo = getHexagramInfo(transformedYaoResults);
+        setBianGuaName(bianGuaInfo?.name || "未知卦");
+      }
+
       const timer = setTimeout(() => {
         setStage(LiuYaoStage.COMPLETED);
 
@@ -427,7 +453,12 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* 本卦 */}
             <div className="space-y-4">
-              <h4 className="text-lg font-medium text-amber-400">本卦</h4>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-amber-400 mb-2">
+                  {benGuaName}
+                </h3>
+                <h4 className="text-lg font-medium text-amber-300">本卦</h4>
+              </div>
               <div className="flex flex-col-reverse items-center space-y-reverse space-y-2">
                 {yaoResults.map((yao, index) => (
                   <div key={index}>{renderYao(yao, index)}</div>
@@ -437,7 +468,12 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
 
             {/* 变卦 */}
             <div className="space-y-4">
-              <h4 className="text-lg font-medium text-red-400">变卦</h4>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-red-400 mb-2">
+                  {bianGuaName}
+                </h3>
+                <h4 className="text-lg font-medium text-red-300">变卦</h4>
+              </div>
               <div className="flex flex-col-reverse items-center space-y-reverse space-y-2">
                 {yaoResults.map((yao, index) => (
                   <div key={index}>{renderYao(yao, index, true)}</div>
