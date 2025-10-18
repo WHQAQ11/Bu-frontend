@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AnimationComponentProps, DivinationResult } from './DivinationAnimation';
+import YaoSymbol from './YaoSymbol';
 
 // 铜钱结果接口
 interface CoinResult {
@@ -192,36 +193,30 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
 
   // 渲染爻线
   const renderYao = (yao: YaoInfo, index: number, isTransformed: boolean = false) => {
-    const isSolid = [7, 9].includes(yao.value);
+    // 步骤1: 状态计算逻辑 (完全保留，未作任何改动)
     const isChanging = yao.isChanging && stage === LiuYaoStage.TRANSFORMATION;
-
     let actualValue = yao.value;
     if (isTransformed && yao.isChanging) {
-      actualValue = yao.value === 6 ? 9 : 6;
+      actualValue = yao.value === 6 ? 9 : 6; // 老阴变老阳，老阳变老阴
     }
 
+    // 步骤2: Props准备 (将计算结果转化为给新组件的清晰指令)
+    const symbolType = [7, 9].includes(yao.value) ? 'yang' : 'yin';
+    const symbolColor = [7, 8].includes(actualValue) ? 'amber' : 'red';
+
+    // 步骤3: 渲染 (将指令传递给新组件，自身不再关心具体实现)
+    // 注意：最外层的div容器及其样式完全保留，确保布局和动画间隔不受影响。
     return (
       <div
         key={index}
-        className={`w-48 h-3 mb-2 transition-all duration-1000 ${
-          isChanging ? 'animate-pulse' : ''
-        }`}
+        className={`w-48 h-3 mb-2 transition-all duration-1000`}
       >
-        {isSolid ? (
-          <div className={`w-full h-full rounded ${
-            [7, 8].includes(actualValue)
-              ? 'bg-gradient-to-r from-amber-600 to-amber-700'
-              : 'bg-gradient-to-r from-red-600 to-red-700 shadow-lg'
-          }`} />
-        ) : (
-          <div className="w-full h-full flex justify-center">
-            <div className={`w-20 h-full rounded ${
-              [7, 8].includes(actualValue)
-                ? 'bg-gradient-to-r from-amber-600 to-amber-700'
-                : 'bg-gradient-to-r from-red-600 to-red-700 shadow-lg'
-            }`} />
-          </div>
-        )}
+        <YaoSymbol
+          type={symbolType}
+          color={symbolColor}
+          isChanging={isChanging}
+          intensity={isChanging ? 1.2 : 1}
+        />
       </div>
     );
   };
