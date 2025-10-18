@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { AnimationComponentProps, DivinationResult } from './DivinationAnimation';
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  AnimationComponentProps,
+  DivinationResult,
+} from "./DivinationAnimation";
 
 // 梅花易数动画阶段
 enum MeiHuaStage {
-  TIME_DISPLAY = 'time_display', // 时间显示
-  TIME_CONVERSION = 'time_conversion', // 时间转数字
-  CALCULATION = 'calculation', // 计算过程
-  HEXAGRAM_BUILDING = 'hexagram_building', // 卦象构建
-  TRANSFORMATION = 'transformation', // 变卦
-  COMPLETED = 'completed' // 完成
+  TIME_DISPLAY = "time_display", // 时间显示
+  TIME_CONVERSION = "time_conversion", // 时间转数字
+  CALCULATION = "calculation", // 计算过程
+  HEXAGRAM_BUILDING = "hexagram_building", // 卦象构建
+  TRANSFORMATION = "transformation", // 变卦
+  COMPLETED = "completed", // 完成
 }
 
 // 时间信息接口
@@ -28,25 +31,33 @@ interface CalculationResult {
 
 // 八卦数据
 const BAGUA_DATA = [
-  { name: '乾', symbol: '☰', pattern: [1, 1, 1] },
-  { name: '坤', symbol: '☷', pattern: [0, 0, 0] },
-  { name: '震', symbol: '☳', pattern: [0, 0, 1] },
-  { name: '艮', symbol: '☶', pattern: [1, 0, 0] },
-  { name: '离', symbol: '☲', pattern: [1, 0, 1] },
-  { name: '坎', symbol: '☵', pattern: [0, 1, 0] },
-  { name: '兑', symbol: '☱', pattern: [0, 1, 1] },
-  { name: '巽', symbol: '☴', pattern: [1, 1, 0] }
+  { name: "乾", symbol: "☰", pattern: [1, 1, 1] },
+  { name: "坤", symbol: "☷", pattern: [0, 0, 0] },
+  { name: "震", symbol: "☳", pattern: [0, 0, 1] },
+  { name: "艮", symbol: "☶", pattern: [1, 0, 0] },
+  { name: "离", symbol: "☲", pattern: [1, 0, 1] },
+  { name: "坎", symbol: "☵", pattern: [0, 1, 0] },
+  { name: "兑", symbol: "☱", pattern: [0, 1, 1] },
+  { name: "巽", symbol: "☴", pattern: [1, 1, 0] },
 ];
 
 export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
   onComplete,
   question,
-  category
+  category,
 }) => {
   const [stage, setStage] = useState<MeiHuaStage>(MeiHuaStage.TIME_DISPLAY);
-  const [timeInfo, setTimeInfo] = useState<TimeInfo>({ year: '', month: '', day: '', hour: '' });
-  const [convertedNumbers, setConvertedNumbers] = useState<{ [key: string]: number }>({});
-  const [calculationResult, setCalculationResult] = useState<CalculationResult | null>(null);
+  const [timeInfo, setTimeInfo] = useState<TimeInfo>({
+    year: "",
+    month: "",
+    day: "",
+    hour: "",
+  });
+  const [convertedNumbers, setConvertedNumbers] = useState<{
+    [key: string]: number;
+  }>({});
+  const [calculationResult, setCalculationResult] =
+    useState<CalculationResult | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
   // 获取当前时间信息
@@ -56,32 +67,48 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
 
     // 简化的时间信息
     return {
-      year: '壬寅',
-      month: '八月',
-      day: '初十',
-      hour: hour >= 23 || hour < 1 ? '子时' :
-             hour >= 1 && hour < 3 ? '丑时' :
-             hour >= 3 && hour < 5 ? '寅时' :
-             hour >= 5 && hour < 7 ? '卯时' :
-             hour >= 7 && hour < 9 ? '辰时' :
-             hour >= 9 && hour < 11 ? '巳时' :
-             hour >= 11 && hour < 13 ? '午时' :
-             hour >= 13 && hour < 15 ? '未时' :
-             hour >= 15 && hour < 17 ? '申时' :
-             hour >= 17 && hour < 19 ? '酉时' :
-             hour >= 19 && hour < 21 ? '戌时' : '亥时'
+      year: "壬寅",
+      month: "八月",
+      day: "初十",
+      hour:
+        hour >= 23 || hour < 1
+          ? "子时"
+          : hour >= 1 && hour < 3
+            ? "丑时"
+            : hour >= 3 && hour < 5
+              ? "寅时"
+              : hour >= 5 && hour < 7
+                ? "卯时"
+                : hour >= 7 && hour < 9
+                  ? "辰时"
+                  : hour >= 9 && hour < 11
+                    ? "巳时"
+                    : hour >= 11 && hour < 13
+                      ? "午时"
+                      : hour >= 13 && hour < 15
+                        ? "未时"
+                        : hour >= 15 && hour < 17
+                          ? "申时"
+                          : hour >= 17 && hour < 19
+                            ? "酉时"
+                            : hour >= 19 && hour < 21
+                              ? "戌时"
+                              : "亥时",
     };
   }, []);
 
   // 将时间文字转换为数字
-  const convertTimeToNumbers = useCallback((_timeInfo: TimeInfo): { [key: string]: number } => {
-    return {
-      year: 3,  // 壬寅年的寅
-      month: 8, // 八月
-      day: 10,  // 初十
-      hour: 7   // 午时
-    };
-  }, []);
+  const convertTimeToNumbers = useCallback(
+    (_timeInfo: TimeInfo): { [key: string]: number } => {
+      return {
+        year: 3, // 壬寅年的寅
+        month: 8, // 八月
+        day: 10, // 初十
+        hour: 7, // 午时
+      };
+    },
+    [],
+  );
 
   // 执行计算
   const performCalculation = useCallback((): CalculationResult => {
@@ -102,14 +129,14 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
       upperTrigram: {
         index: upperIndex,
         name: BAGUA_DATA[upperIndex].name,
-        symbol: BAGUA_DATA[upperIndex].symbol
+        symbol: BAGUA_DATA[upperIndex].symbol,
       },
       lowerTrigram: {
         index: lowerIndex,
         name: BAGUA_DATA[lowerIndex].name,
-        symbol: BAGUA_DATA[lowerIndex].symbol
+        symbol: BAGUA_DATA[lowerIndex].symbol,
       },
-      changingLine
+      changingLine,
     };
   }, [convertedNumbers]);
 
@@ -174,16 +201,18 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
         setStage(MeiHuaStage.COMPLETED);
 
         // 生成卦象数值
-        const upperPattern = BAGUA_DATA[calculationResult!.upperTrigram.index].pattern;
-        const lowerPattern = BAGUA_DATA[calculationResult!.lowerTrigram.index].pattern;
+        const upperPattern =
+          BAGUA_DATA[calculationResult!.upperTrigram.index].pattern;
+        const lowerPattern =
+          BAGUA_DATA[calculationResult!.lowerTrigram.index].pattern;
 
         // 转换为6-9的数值
         const patternToNumber = (pattern: number[]): number => {
-          const binary = pattern.join('');
-          if (binary === '000') return 6; // 老阴
-          if (binary === '001') return 7; // 少阳
-          if (binary === '110') return 8; // 少阴
-          if (binary === '111') return 9; // 老阳
+          const binary = pattern.join("");
+          if (binary === "000") return 6; // 老阴
+          if (binary === "001") return 7; // 少阳
+          if (binary === "110") return 8; // 少阴
+          if (binary === "111") return 9; // 老阳
           return 7; // 默认少阳
         };
 
@@ -193,23 +222,24 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
           patternToNumber(lowerPattern),
           patternToNumber(upperPattern),
           patternToNumber(upperPattern),
-          patternToNumber(upperPattern)
+          patternToNumber(upperPattern),
         ];
 
         // 模拟动爻变化
         const transformedHexagram = [...originalHexagram];
         const changingLineIndex = calculationResult!.changingLine - 1;
         if (originalHexagram[changingLineIndex] % 2 === 0) {
-          transformedHexagram[changingLineIndex] = originalHexagram[changingLineIndex] === 6 ? 9 : 7;
+          transformedHexagram[changingLineIndex] =
+            originalHexagram[changingLineIndex] === 6 ? 9 : 7;
         }
 
         const result: DivinationResult = {
-          method: 'meihua',
+          method: "meihua",
           originalHexagram,
           transformedHexagram,
           changingLine: calculationResult!.changingLine,
           question,
-          category
+          category,
         };
 
         setTimeout(() => onComplete(result), 1000);
@@ -221,11 +251,13 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
   // 渲染时间文字
   const renderTimeText = (text: string, isConverting: boolean = false) => {
     return (
-      <span className={`inline-block px-4 py-2 mx-1 text-2xl font-serif transition-all duration-1000 ${
-        isConverting
-          ? 'animate-pulse bg-blue-500/20 rounded-lg border border-blue-400/30 text-blue-300'
-          : 'text-cyan-300'
-      }`}>
+      <span
+        className={`inline-block px-4 py-2 mx-1 text-2xl font-serif transition-all duration-1000 ${
+          isConverting
+            ? "animate-pulse bg-blue-500/20 rounded-lg border border-blue-400/30 text-blue-300"
+            : "text-cyan-300"
+        }`}
+      >
         {text}
       </span>
     );
@@ -236,9 +268,11 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
     return (
       <div className="flex items-center space-x-3">
         <span className="text-lg text-midnight-300">{label}:</span>
-        <div className={`w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-xl font-bold text-white shadow-lg ${
-          isAnimating ? 'animate-pulse' : ''
-        }`}>
+        <div
+          className={`w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-xl font-bold text-white shadow-lg ${
+            isAnimating ? "animate-pulse" : ""
+          }`}
+        >
           {number}
         </div>
       </div>
@@ -248,13 +282,19 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
   // 渲染卦象符号
   const renderTrigramSymbol = (trigram: any, isHighlight: boolean = false) => {
     return (
-      <div className={`text-center space-y-2 transition-all duration-1000 ${
-        isHighlight ? 'scale-125 animate-pulse-glow' : ''
-      }`}>
-        <div className={`text-6xl ${isHighlight ? 'text-yellow-400' : 'text-cyan-300'}`}>
+      <div
+        className={`text-center space-y-2 transition-all duration-1000 ${
+          isHighlight ? "scale-125 animate-pulse-glow" : ""
+        }`}
+      >
+        <div
+          className={`text-6xl ${isHighlight ? "text-yellow-400" : "text-cyan-300"}`}
+        >
           {trigram.symbol}
         </div>
-        <p className={`text-lg font-medium ${isHighlight ? 'text-yellow-400' : 'text-cyan-300'}`}>
+        <p
+          className={`text-lg font-medium ${isHighlight ? "text-yellow-400" : "text-cyan-300"}`}
+        >
           {trigram.name}卦
         </p>
       </div>
@@ -292,9 +332,11 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
             <div className="flex justify-center items-center space-x-4">
               {Object.entries(timeInfo).map(([key, value]) => (
                 <div key={key} className="text-center">
-                  <div className={`transition-all duration-1000 ${
-                    convertedNumbers[key] ? 'opacity-50' : ''
-                  }`}>
+                  <div
+                    className={`transition-all duration-1000 ${
+                      convertedNumbers[key] ? "opacity-50" : ""
+                    }`}
+                  >
                     {renderTimeText(value, true)}
                   </div>
                   {convertedNumbers[key] && (
@@ -322,16 +364,29 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
               <h4 className="text-lg text-cyan-300">上卦计算</h4>
               <div className="space-y-2">
                 <div className="flex justify-center space-x-4">
-                  {renderNumber(convertedNumbers.year, '年')}
+                  {renderNumber(convertedNumbers.year, "年")}
                   <span className="text-2xl text-midnight-300">+</span>
-                  {renderNumber(convertedNumbers.month, '月')}
+                  {renderNumber(convertedNumbers.month, "月")}
                   <span className="text-2xl text-midnight-300">+</span>
-                  {renderNumber(convertedNumbers.day, '日')}
+                  {renderNumber(convertedNumbers.day, "日")}
                 </div>
                 <div className="text-center">
-                  <span className="text-lg text-midnight-300">= {convertedNumbers.year + convertedNumbers.month + convertedNumbers.day}</span>
+                  <span className="text-lg text-midnight-300">
+                    ={" "}
+                    {convertedNumbers.year +
+                      convertedNumbers.month +
+                      convertedNumbers.day}
+                  </span>
                   <span className="text-lg text-midnight-300 mx-2">÷ 8</span>
-                  <span className="text-lg text-midnight-300">余 {((convertedNumbers.year + convertedNumbers.month + convertedNumbers.day - 1) % 8) + 1}</span>
+                  <span className="text-lg text-midnight-300">
+                    余{" "}
+                    {((convertedNumbers.year +
+                      convertedNumbers.month +
+                      convertedNumbers.day -
+                      1) %
+                      8) +
+                      1}
+                  </span>
                 </div>
               </div>
             </div>
@@ -341,18 +396,33 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
               <h4 className="text-lg text-cyan-300">下卦计算</h4>
               <div className="space-y-2">
                 <div className="flex justify-center space-x-4">
-                  {renderNumber(convertedNumbers.year, '年')}
+                  {renderNumber(convertedNumbers.year, "年")}
                   <span className="text-2xl text-midnight-300">+</span>
-                  {renderNumber(convertedNumbers.month, '月')}
+                  {renderNumber(convertedNumbers.month, "月")}
                   <span className="text-2xl text-midnight-300">+</span>
-                  {renderNumber(convertedNumbers.day, '日')}
+                  {renderNumber(convertedNumbers.day, "日")}
                   <span className="text-2xl text-midnight-300">+</span>
-                  {renderNumber(convertedNumbers.hour, '时')}
+                  {renderNumber(convertedNumbers.hour, "时")}
                 </div>
                 <div className="text-center">
-                  <span className="text-lg text-midnight-300">= {convertedNumbers.year + convertedNumbers.month + convertedNumbers.day + convertedNumbers.hour}</span>
+                  <span className="text-lg text-midnight-300">
+                    ={" "}
+                    {convertedNumbers.year +
+                      convertedNumbers.month +
+                      convertedNumbers.day +
+                      convertedNumbers.hour}
+                  </span>
                   <span className="text-lg text-midnight-300 mx-2">÷ 8</span>
-                  <span className="text-lg text-midnight-300">余 {((convertedNumbers.year + convertedNumbers.month + convertedNumbers.day + convertedNumbers.hour - 1) % 8) + 1}</span>
+                  <span className="text-lg text-midnight-300">
+                    余{" "}
+                    {((convertedNumbers.year +
+                      convertedNumbers.month +
+                      convertedNumbers.day +
+                      convertedNumbers.hour -
+                      1) %
+                      8) +
+                      1}
+                  </span>
                 </div>
               </div>
             </div>
@@ -390,7 +460,8 @@ export const MeiHuaAnimation: React.FC<AnimationComponentProps> = ({
               {renderTrigramSymbol(calculationResult.lowerTrigram)}
             </div>
             <p className="text-lg text-midnight-200 mt-4">
-              {calculationResult.upperTrigram.name}上{calculationResult.lowerTrigram.name}下
+              {calculationResult.upperTrigram.name}上
+              {calculationResult.lowerTrigram.name}下
             </p>
           </div>
         </div>

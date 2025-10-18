@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import LiuYaoAnimation from './LiuYaoAnimation';
-import MeiHuaAnimation from './MeiHuaAnimation';
+import React, { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import LiuYaoAnimation from "./LiuYaoAnimation";
+import MeiHuaAnimation from "./MeiHuaAnimation";
 
 // 动画状态枚举
 export enum AnimationStage {
-  PREPARING = 'preparing',
-  IN_PROGRESS = 'in_progress',
-  COMPLETING = 'completing',
-  COMPLETED = 'completed'
+  PREPARING = "preparing",
+  IN_PROGRESS = "in_progress",
+  COMPLETING = "completing",
+  COMPLETED = "completed",
 }
 
 // 占卜方法类型
-export type DivinationMethod = 'liuyao' | 'meihua' | 'ai';
+export type DivinationMethod = "liuyao" | "meihua" | "ai";
 
 // 动画结果接口
 export interface DivinationResult {
@@ -43,7 +43,10 @@ interface DivinationAnimationProps {
 }
 
 // 动画组件映射
-const animationComponents: Record<DivinationMethod, React.ComponentType<AnimationComponentProps>> = {
+const animationComponents: Record<
+  DivinationMethod,
+  React.ComponentType<AnimationComponentProps>
+> = {
   liuyao: LiuYaoAnimation,
   meihua: MeiHuaAnimation,
   ai: () => null, // AI解卦暂不实现动画
@@ -55,7 +58,7 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
   onComplete,
   question,
   method,
-  category
+  category,
 }) => {
   const [stage, setStage] = useState<AnimationStage>(AnimationStage.PREPARING);
   const [showSkip, setShowSkip] = useState(false);
@@ -71,17 +74,20 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
   }, [isOpen, stage]);
 
   // 处理动画完成
-  const handleAnimationComplete = useCallback((result: DivinationResult) => {
-    setStage(AnimationStage.COMPLETING);
+  const handleAnimationComplete = useCallback(
+    (result: DivinationResult) => {
+      setStage(AnimationStage.COMPLETING);
 
-    // 延迟显示完成状态
-    setTimeout(() => {
-      setStage(AnimationStage.COMPLETED);
+      // 延迟显示完成状态
       setTimeout(() => {
-        onComplete(result);
-      }, 1000);
-    }, 500);
-  }, [onComplete]);
+        setStage(AnimationStage.COMPLETED);
+        setTimeout(() => {
+          onComplete(result);
+        }, 1000);
+      }, 500);
+    },
+    [onComplete],
+  );
 
   // 跳过动画
   const handleSkip = useCallback(() => {
@@ -90,7 +96,7 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
       method,
       originalHexagram: generateMockHexagram(),
       question,
-      category
+      category,
     };
 
     handleAnimationComplete(mockResult);
@@ -109,7 +115,7 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
   if (!isOpen) return null;
 
   // AI解卦不需要动画，直接完成
-  if (method === 'ai') {
+  if (method === "ai") {
     useEffect(() => {
       const timer = setTimeout(() => {
         handleSkip();
@@ -123,7 +129,11 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
       {/* 背景遮罩 */}
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500"
-        onClick={stage === AnimationStage.COMPLETED ? undefined : (e) => e.stopPropagation()}
+        onClick={
+          stage === AnimationStage.COMPLETED
+            ? undefined
+            : (e) => e.stopPropagation()
+        }
       />
 
       {/* 动画容器 */}
@@ -144,8 +154,18 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
             onClick={onClose}
             className="absolute top-8 right-8 w-10 h-10 bg-golden-400/20 hover:bg-golden-400/30 text-golden-400 rounded-full flex items-center justify-center transition-all duration-300 border border-golden-400/30"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         )}
@@ -159,12 +179,14 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
                 <span className="text-2xl">🔮</span>
               </div>
               <h2 className="text-2xl font-bold text-midnight-100">准备占卜</h2>
-              <p className="text-midnight-300">请保持内心平静，专注思考您的问题...</p>
+              <p className="text-midnight-300">
+                请保持内心平静，专注思考您的问题...
+              </p>
             </div>
           )}
 
           {/* 动画进行阶段 */}
-          {stage === AnimationStage.IN_PROGRESS && method !== 'ai' && (
+          {stage === AnimationStage.IN_PROGRESS && method !== "ai" && (
             <div className="animate-fadeIn">
               {AnimationComponent && (
                 <AnimationComponent
@@ -181,8 +203,16 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
           {stage === AnimationStage.COMPLETING && (
             <div className="text-center space-y-6 animate-fadeIn">
               <div className="w-16 h-16 mx-auto bg-gradient-to-br from-golden-400 to-golden-600 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </div>
               <h2 className="text-2xl font-bold text-golden-400">占卜完成</h2>
@@ -196,7 +226,9 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
               <div className="w-20 h-20 mx-auto bg-gradient-to-br from-golden-400 to-golden-600 rounded-full flex items-center justify-center animate-pulse-glow">
                 <span className="text-3xl">✨</span>
               </div>
-              <h2 className="text-3xl font-bold text-golden-400">占卜结果已生成</h2>
+              <h2 className="text-3xl font-bold text-golden-400">
+                占卜结果已生成
+              </h2>
               <p className="text-midnight-300">即将为您展示解读...</p>
             </div>
           )}
@@ -206,7 +238,9 @@ export const DivinationAnimation: React.FC<DivinationAnimationProps> = ({
   );
 
   // 使用 Portal 渲染到 body
-  return typeof document !== 'undefined' ? createPortal(content, document.body) : null;
+  return typeof document !== "undefined"
+    ? createPortal(content, document.body)
+    : null;
 };
 
 // 辅助函数：生成模拟卦象

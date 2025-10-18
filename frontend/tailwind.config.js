@@ -79,6 +79,9 @@ export default {
         'float': 'float 3s ease-in-out infinite',
         'rotate-slow': 'rotate 8s linear infinite',
         'shimmer': 'shimmer 2s linear infinite',
+        'coin-flip-3d': 'coinFlip3D 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        'coin-toss-arc': 'coinTossArc 2.5s ease-in-out',
+        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
@@ -111,6 +114,83 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
+        // 3D铜钱翻转动画
+        coinFlip3D: {
+          '0%': {
+            transform: 'translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
+            opacity: '1'
+          },
+          '10%': {
+            transform: 'translateY(-80px) translateZ(100px) rotateX(180deg) rotateY(120deg) rotateZ(90deg)',
+            opacity: '1'
+          },
+          '25%': {
+            transform: 'translateY(-120px) translateZ(150px) rotateX(360deg) rotateY(240deg) rotateZ(180deg)',
+            opacity: '1'
+          },
+          '40%': {
+            transform: 'translateY(-100px) translateZ(120px) rotateX(540deg) rotateY(360deg) rotateZ(270deg)',
+            opacity: '1'
+          },
+          '60%': {
+            transform: 'translateY(-60px) translateZ(80px) rotateX(720deg) rotateY(480deg) rotateZ(360deg)',
+            opacity: '1'
+          },
+          '80%': {
+            transform: 'translateY(-20px) translateZ(30px) rotateX(900deg) rotateY(600deg) rotateZ(450deg)',
+            opacity: '1'
+          },
+          '95%': {
+            transform: 'translateY(-2px) translateZ(5px) rotateX(1080deg) rotateY(720deg) rotateZ(540deg)',
+            opacity: '1'
+          },
+          '100%': {
+            transform: 'translateY(0px) translateZ(0px) rotateX(1260deg) rotateY(840deg) rotateZ(630deg)',
+            opacity: '1'
+          }
+        },
+        // 铜钱抛物线轨迹
+        coinTossArc: {
+          '0%': {
+            transform: 'translateY(0px) translateX(0px) scale(1)',
+            opacity: '1'
+          },
+          '20%': {
+            transform: 'translateY(-100px) translateX(20px) scale(0.9)',
+            opacity: '1'
+          },
+          '50%': {
+            transform: 'translateY(-150px) translateX(50px) scale(0.8)',
+            opacity: '1'
+          },
+          '80%': {
+            transform: 'translateY(-50px) translateX(30px) scale(0.95)',
+            opacity: '1'
+          },
+          '100%': {
+            transform: 'translateY(0px) translateX(0px) scale(1)',
+            opacity: '1'
+          }
+        },
+        // 动态光晕脉动
+        glowPulse: {
+          '0%, 100%': {
+            filter: 'brightness(1) drop-shadow(0 0 20px rgba(217, 119, 6, 0.6))',
+            transform: 'scale(1)'
+          },
+          '25%': {
+            filter: 'brightness(1.2) drop-shadow(0 0 30px rgba(217, 119, 6, 0.8))',
+            transform: 'scale(1.02)'
+          },
+          '50%': {
+            filter: 'brightness(1.4) drop-shadow(0 0 40px rgba(217, 119, 6, 1))',
+            transform: 'scale(1.05)'
+          },
+          '75%': {
+            filter: 'brightness(1.2) drop-shadow(0 0 30px rgba(217, 119, 6, 0.8))',
+            transform: 'scale(1.02)'
+          }
+        }
       },
       boxShadow: {
         'glow': '0 0 20px rgba(124, 58, 237, 0.3)',

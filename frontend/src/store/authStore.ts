@@ -1,12 +1,16 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { AuthService } from '@/services/auth';
-import { AuthState, LoginRequest, RegisterRequest } from '@/types/auth';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import { AuthService } from "@/services/auth";
+import { AuthState, LoginRequest, RegisterRequest } from "@/types/auth";
 
 interface AuthStore extends AuthState {
   // Actions
-  login: (credentials: LoginRequest) => Promise<{ success: boolean; message: string }>;
-  register: (userData: RegisterRequest) => Promise<{ success: boolean; message: string }>;
+  login: (
+    credentials: LoginRequest,
+  ) => Promise<{ success: boolean; message: string }>;
+  register: (
+    userData: RegisterRequest,
+  ) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
   initializeAuth: () => void;
   setLoading: (loading: boolean) => void;
@@ -45,11 +49,14 @@ export const useAuthStore = create<AuthStore>()(
             return { success: true, message: response.message };
           } else {
             set({ isLoading: false });
-            return { success: false, message: response.message || '登录失败' };
+            return { success: false, message: response.message || "登录失败" };
           }
         } catch (error: any) {
           set({ isLoading: false });
-          return { success: false, message: error.message || '登录失败，请稍后重试' };
+          return {
+            success: false,
+            message: error.message || "登录失败，请稍后重试",
+          };
         }
       },
 
@@ -72,11 +79,14 @@ export const useAuthStore = create<AuthStore>()(
             return { success: true, message: response.message };
           } else {
             set({ isLoading: false });
-            return { success: false, message: response.message || '注册失败' };
+            return { success: false, message: response.message || "注册失败" };
           }
         } catch (error: any) {
           set({ isLoading: false });
-          return { success: false, message: error.message || '注册失败，请稍后重试' };
+          return {
+            success: false,
+            message: error.message || "注册失败，请稍后重试",
+          };
         }
       },
 
@@ -111,13 +121,13 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,
         token: state.token,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );

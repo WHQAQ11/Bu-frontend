@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import DivinationAnimation, { DivinationResult } from '@/components/ui/DivinationAnimation';
+import React, { useState } from "react";
+import DivinationAnimation, {
+  DivinationResult,
+} from "@/components/ui/DivinationAnimation";
 
 const AnimationDemo: React.FC = () => {
   const [showLiuYao, setShowLiuYao] = useState(false);
@@ -7,7 +9,7 @@ const AnimationDemo: React.FC = () => {
   const [showAI, setShowAI] = useState(false);
 
   const handleAnimationComplete = (result: DivinationResult) => {
-    console.log('Animation completed:', result);
+    console.log("Animation completed:", result);
     // 可以在这里添加完成后的处理
   };
 
@@ -22,7 +24,9 @@ const AnimationDemo: React.FC = () => {
       <div className="text-center space-y-8 max-w-4xl mx-auto">
         <div className="space-y-4">
           <h1 className="text-4xl font-bold text-golden-400">占卜动画演示</h1>
-          <p className="text-midnight-300 text-lg">点击下面的按钮来体验不同的占卜动画效果</p>
+          <p className="text-midnight-300 text-lg">
+            点击下面的按钮来体验不同的占卜动画效果
+          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
@@ -30,7 +34,9 @@ const AnimationDemo: React.FC = () => {
           <div className="space-y-4">
             <div className="bg-midnight-800/50 rounded-xl p-6 border border-purple-500/30">
               <div className="text-6xl mb-4">🔮</div>
-              <h3 className="text-xl font-bold text-purple-400 mb-2">六爻占卜</h3>
+              <h3 className="text-xl font-bold text-purple-400 mb-2">
+                六爻占卜
+              </h3>
               <p className="text-midnight-300 text-sm mb-4">
                 深紫色星空背景，铜钱投掷动画，爻线生成效果
               </p>
@@ -84,11 +90,15 @@ const AnimationDemo: React.FC = () => {
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span className="text-midnight-300">六爻：15-20秒，支持跳过</span>
+                <span className="text-midnight-300">
+                  六爻：15-20秒，支持跳过
+                </span>
               </div>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-                <span className="text-midnight-300">梅花：10-15秒，数学可视化</span>
+                <span className="text-midnight-300">
+                  梅花：10-15秒，数学可视化
+                </span>
               </div>
             </div>
             <div className="space-y-2">
