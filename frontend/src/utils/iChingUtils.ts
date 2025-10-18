@@ -1039,3 +1039,188 @@ export const searchHexagrams = (keyword: string): HexagramInfo[] => {
     hexagram.name.toLowerCase().includes(searchTerm),
   );
 };
+
+// 解读结果接口
+export interface InterpretationResult {
+  title: string;           // 如"本卦·乾·初九爻辞"
+  text: string;           // 爻辞原文
+  sourceGua: 'ben' | 'bian'; // 来源是本卦还是变卦
+  yaoPosition?: string;   // 爻位："初九"、"六二"等
+  importance: 'primary' | 'secondary'; // 重要性级别
+}
+
+/**
+ * 获取爻位名称
+ * @param index 爻的索引 (0-5, 从下到上)
+ * @param value 爻的值 (6,7,8,9)
+ * @returns 爻位名称，如"初九"、"六二"等
+ */
+export const getYaoPositionName = (index: number, value: number): string => {
+  const positionNames = ['初', '二', '三', '四', '五', '上'];
+  const yaoType = [7, 9].includes(value) ? '九' : '六';
+  return positionNames[index] + yaoType;
+};
+
+/**
+ * 获取核心解读
+ * 根据动爻数量确定本次占卜的核心答案
+ * @param benGuaInfo 本卦信息
+ * @param bianGuaInfo 变卦信息（可选）
+ * @param changingLineIndexes 动爻的索引数组 [0, 1, 2, 3, 4, 5]
+ * @param originalHexagram 原始卦象的爻值数组（可选，用于判断爻位阴阳）
+ * @returns 核心解读结果
+ */
+export const getPrimaryInterpretation = (
+  benGuaInfo: HexagramInfo,
+  bianGuaInfo?: HexagramInfo,
+  changingLineIndexes: number[] = [],
+  originalHexagram?: number[]
+): InterpretationResult => {
+  const changingCount = changingLineIndexes.length;
+
+  switch (changingCount) {
+    case 0: {
+      // 无动爻，看本卦卦辞
+      return {
+        title: `本卦 · ${benGuaInfo.name}`,
+        text: benGuaInfo.guaCi,
+        sourceGua: 'ben',
+        importance: 'primary',
+      };
+    }
+
+    case 1: {
+      // 一爻动，看此动爻的爻辞
+      const lineIndex = changingLineIndexes[0];
+      const lineValue = benGuaInfo.yaoCi[lineIndex];
+
+      // 根据原始卦象判断爻位的阴阳
+      let yaoValue = 9; // 默认为阳
+      if (originalHexagram && originalHexagram[lineIndex]) {
+        yaoValue = originalHexagram[lineIndex];
+      }
+      const yaoPosition = getYaoPositionName(lineIndex, yaoValue);
+
+      return {
+        title: `本卦 · ${benGuaInfo.name} · ${yaoPosition}爻辞`,
+        text: lineValue,
+        sourceGua: 'ben',
+        yaoPosition,
+        importance: 'primary',
+      };
+    }
+
+    case 2: {
+      // 两爻动，看本卦中下方动爻的爻辞
+      const lowerLineIndex = Math.min(...changingLineIndexes);
+      const lineValue = benGuaInfo.yaoCi[lowerLineIndex];
+
+      // 根据原始卦象判断爻位的阴阳
+      let yaoValue = 9; // 默认为阳
+      if (originalHexagram && originalHexagram[lowerLineIndex]) {
+        yaoValue = originalHexagram[lowerLineIndex];
+      }
+      const yaoPosition = getYaoPositionName(lowerLineIndex, yaoValue);
+
+      return {
+        title: `本卦 · ${benGuaInfo.name} · ${yaoPosition}爻辞`,
+        text: lineValue,
+        sourceGua: 'ben',
+        yaoPosition,
+        importance: 'primary',
+      };
+    }
+
+    case 3: {
+      // 三爻动，取本卦卦辞
+      return {
+        title: `本卦 · ${benGuaInfo.name}`,
+        text: benGuaInfo.guaCi,
+        sourceGua: 'ben',
+        importance: 'primary',
+      };
+    }
+
+    case 4: {
+      // 四爻动，取变卦卦辞
+      if (bianGuaInfo) {
+        return {
+          title: `变卦 · ${bianGuaInfo.name}`,
+          text: bianGuaInfo.guaCi,
+          sourceGua: 'bian',
+          importance: 'primary',
+        };
+      }
+      // 如果没有变卦信息，回退到本卦卦辞
+      return {
+        title: `本卦 · ${benGuaInfo.name}`,
+        text: benGuaInfo.guaCi,
+        sourceGua: 'ben',
+        importance: 'primary',
+      };
+    }
+
+    case 5: {
+      // 五爻动，取变卦中不变的爻辞
+      if (bianGuaInfo) {
+        // 找出变卦中哪个爻位是不变的（即原卦中不是动爻的）
+        const staticLines = [0, 1, 2, 3, 4, 5].filter(i => !changingLineIndexes.includes(i));
+        if (staticLines.length > 0) {
+          const staticLineIndex = staticLines[0];
+          const lineValue = bianGuaInfo.yaoCi[staticLineIndex];
+
+          // 根据原始卦象判断爻位的阴阳（五爻动时，唯一的静爻保持原值）
+          let yaoValue = 7; // 默认为少阳
+          if (originalHexagram && originalHexagram[staticLineIndex]) {
+            yaoValue = originalHexagram[staticLineIndex];
+          }
+          const yaoPosition = getYaoPositionName(staticLineIndex, yaoValue);
+
+          return {
+            title: `变卦 · ${bianGuaInfo.name} · ${yaoPosition}爻辞`,
+            text: lineValue,
+            sourceGua: 'bian',
+            yaoPosition,
+            importance: 'primary',
+          };
+        }
+      }
+      // 回退到本卦卦辞
+      return {
+        title: `本卦 · ${benGuaInfo.name}`,
+        text: benGuaInfo.guaCi,
+        sourceGua: 'ben',
+        importance: 'primary',
+      };
+    }
+
+    case 6: {
+      // 六爻动，取变卦卦辞
+      if (bianGuaInfo) {
+        return {
+          title: `变卦 · ${bianGuaInfo.name}`,
+          text: bianGuaInfo.guaCi,
+          sourceGua: 'bian',
+          importance: 'primary',
+        };
+      }
+      // 回退到本卦卦辞
+      return {
+        title: `本卦 · ${benGuaInfo.name}`,
+        text: benGuaInfo.guaCi,
+        sourceGua: 'ben',
+        importance: 'primary',
+      };
+    }
+
+    default: {
+      // 默认情况，使用本卦卦辞
+      return {
+        title: `本卦 · ${benGuaInfo.name}`,
+        text: benGuaInfo.guaCi,
+        sourceGua: 'ben',
+        importance: 'primary',
+      };
+    }
+  }
+};
