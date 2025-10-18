@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  AnimationComponentProps,
-  DivinationResult,
-} from "./DivinationAnimation";
+import { useNavigate } from "react-router-dom";
+import { AnimationComponentProps } from "./DivinationAnimation";
 import YaoSymbol from "./YaoSymbol";
-import { getHexagramInfo } from "../../utils/iChingUtils";
+import {
+  getHexagramInfo,
+  calculateBianGuaLines,
+} from "../../utils/iChingUtils";
 
 // 铜钱结果接口
 interface CoinResult {
@@ -30,10 +31,10 @@ enum LiuYaoStage {
 }
 
 export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
-  onComplete,
   question,
   category,
 }) => {
+  const navigate = useNavigate();
   const [stage, setStage] = useState<LiuYaoStage>(LiuYaoStage.COIN_TOSS);
   const [currentRound, setCurrentRound] = useState(0);
   const [coins, setCoins] = useState<CoinResult[]>([]);
@@ -43,6 +44,9 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   // 卦名状态
   const [benGuaName, setBenGuaName] = useState<string>("");
   const [bianGuaName, setBianGuaName] = useState<string>("");
+
+  // 变卦数据状态
+  const [bianGuaLines, setBianGuaLines] = useState<YaoInfo[]>([]);
 
   // 生成随机铜钱结果
   const generateCoinResult = useCallback((): CoinResult[] => {
@@ -127,25 +131,24 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
         const benGuaInfo = getHexagramInfo(yaoResults);
         setBenGuaName(benGuaInfo?.name || "未知卦");
 
+        // 使用正确的变卦计算函数
+        const calculatedBianGuaLines = calculateBianGuaLines(yaoResults);
+        setBianGuaLines(
+          calculatedBianGuaLines.map((yao) => ({
+            ...yao,
+            coinResult: [], // 为兼容性添加空的coinResult数组
+          })),
+        );
+
         // 计算变卦卦名
-        const transformedYaoResults = yaoResults.map((yao) => {
-          if (yao.isChanging) {
-            return {
-              ...yao,
-              value: yao.value === 6 ? 9 : 6, // 老阴变老阳，老阳变老阴
-              isChanging: false, // 变卦后不再是动爻
-            };
-          }
-          return yao;
-        });
-        const bianGuaInfo = getHexagramInfo(transformedYaoResults);
+        const bianGuaInfo = getHexagramInfo(calculatedBianGuaLines);
         setBianGuaName(bianGuaInfo?.name || "未知卦");
       }
 
       const timer = setTimeout(() => {
         setStage(LiuYaoStage.COMPLETED);
 
-        // 生成最终结果
+        // 生成最终结果数据
         const originalHexagram = yaoResults.map((yao) => yao.value);
         const transformedHexagram = yaoResults.map((yao) => {
           if (yao.isChanging) {
@@ -154,23 +157,29 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
           return yao.value;
         });
 
-        const changingLineIndex = yaoResults.findIndex((yao) => yao.isChanging);
+        const changingLineIndexes = yaoResults
+          .map((yao, index) => (yao.isChanging ? index : -1))
+          .filter((index) => index >= 0);
 
-        const result: DivinationResult = {
-          method: "liuyao",
-          originalHexagram,
-          transformedHexagram,
-          changingLine:
-            changingLineIndex >= 0 ? changingLineIndex + 1 : undefined,
-          question,
-          category,
-        };
-
-        setTimeout(() => onComplete(result), 1000);
+        // 导航到结果页面，传递完整数据
+        setTimeout(() => {
+          navigate("/divination/result-page", {
+            state: {
+              benGuaInfo: getHexagramInfo(yaoResults),
+              bianGuaInfo: getHexagramInfo(bianGuaLines),
+              changingLineIndexes,
+              originalHexagram,
+              transformedHexagram,
+              question,
+              category,
+              method: "liuyao",
+            },
+          });
+        }, 1000);
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [stage, yaoResults, onComplete, question, category]);
+  }, [stage, yaoResults, navigate, question, category, bianGuaLines]);
 
   // 渲染铜钱组件
   const renderCoin = (coin: CoinResult, index: number) => {
@@ -475,8 +484,8 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
                 <h4 className="text-lg font-medium text-red-300">变卦</h4>
               </div>
               <div className="flex flex-col-reverse items-center space-y-reverse space-y-2">
-                {yaoResults.map((yao, index) => (
-                  <div key={index}>{renderYao(yao, index, true)}</div>
+                {bianGuaLines.map((yao, index) => (
+                  <div key={`bian-${index}`}>{renderYao(yao, index)}</div>
                 ))}
               </div>
             </div>
