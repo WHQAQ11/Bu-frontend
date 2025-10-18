@@ -43,6 +43,24 @@ h1 {
   text-align: center;
 }
 
+/* 3D Transform Support */
+.preserve-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.chinese-coin-container-3d {
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* GPU Acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
