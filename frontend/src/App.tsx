@@ -4,6 +4,7 @@ import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
 import Divination from "@/pages/Divination";
 import DivinationResult from "@/pages/DivinationResult";
+import ResultPage from "@/pages/ResultPage";
 import Profile from "@/pages/Profile";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
@@ -37,6 +38,10 @@ function App() {
                 <Route
                   path="/divination/result"
                   element={<DivinationResult />}
+                />
+                <Route
+                  path="/divination/result-page"
+                  element={<ResultPage />}
                 />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/login" element={<LoginPage />} />
