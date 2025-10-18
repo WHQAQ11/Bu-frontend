@@ -114,62 +114,123 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
-        // 3D铜钱翻转动画
+        // 增强版3D铜钱翻转动画 - 真实物理效果
         coinFlip3D: {
           '0%': {
-            transform: 'translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)',
+            transform: 'translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)',
             opacity: '1'
           },
-          '10%': {
-            transform: 'translateY(-80px) translateZ(100px) rotateX(180deg) rotateY(120deg) rotateZ(90deg)',
+          '5%': {
+            transform: 'translateY(-40px) translateZ(80px) rotateX(90deg) rotateY(60deg) rotateZ(45deg) scale(0.95)',
+            opacity: '1'
+          },
+          '15%': {
+            transform: 'translateY(-120px) translateZ(180px) rotateX(270deg) rotateY(180deg) rotateZ(135deg) scale(0.85)',
             opacity: '1'
           },
           '25%': {
-            transform: 'translateY(-120px) translateZ(150px) rotateX(360deg) rotateY(240deg) rotateZ(180deg)',
+            transform: 'translateY(-180px) translateZ(220px) rotateX(450deg) rotateY(300deg) rotateZ(225deg) scale(0.8)',
             opacity: '1'
           },
-          '40%': {
-            transform: 'translateY(-100px) translateZ(120px) rotateX(540deg) rotateY(360deg) rotateZ(270deg)',
+          '35%': {
+            transform: 'translateY(-200px) translateZ(200px) rotateX(630deg) rotateY(420deg) rotateZ(315deg) scale(0.78)',
             opacity: '1'
           },
-          '60%': {
-            transform: 'translateY(-60px) translateZ(80px) rotateX(720deg) rotateY(480deg) rotateZ(360deg)',
+          '50%': {
+            transform: 'translateY(-160px) translateZ(150px) rotateX(900deg) rotateY(540deg) rotateZ(405deg) scale(0.85)',
+            opacity: '1'
+          },
+          '65%': {
+            transform: 'translateY(-100px) translateZ(100px) rotateX(1170deg) rotateY(660deg) rotateZ(495deg) scale(0.92)',
             opacity: '1'
           },
           '80%': {
-            transform: 'translateY(-20px) translateZ(30px) rotateX(900deg) rotateY(600deg) rotateZ(450deg)',
+            transform: 'translateY(-40px) translateZ(40px) rotateX(1440deg) rotateY(780deg) rotateZ(585deg) scale(0.98)',
+            opacity: '1'
+          },
+          '90%': {
+            transform: 'translateY(-8px) translateZ(10px) rotateX(1620deg) rotateY(840deg) rotateZ(630deg) scale(0.99)',
             opacity: '1'
           },
           '95%': {
-            transform: 'translateY(-2px) translateZ(5px) rotateX(1080deg) rotateY(720deg) rotateZ(540deg)',
+            transform: 'translateY(-2px) translateZ(3px) rotateX(1710deg) rotateY(870deg) rotateZ(645deg) scale(1)',
             opacity: '1'
           },
           '100%': {
-            transform: 'translateY(0px) translateZ(0px) rotateX(1260deg) rotateY(840deg) rotateZ(630deg)',
+            transform: 'translateY(0px) translateZ(0px) rotateX(1800deg) rotateY(900deg) rotateZ(660deg) scale(1)',
             opacity: '1'
           }
         },
-        // 铜钱抛物线轨迹
+        // 真实抛物线轨迹 - 重力加速度
         coinTossArc: {
           '0%': {
             transform: 'translateY(0px) translateX(0px) scale(1)',
             opacity: '1'
           },
+          '10%': {
+            transform: 'translateY(-50px) translateX(15px) scale(0.95)',
+            opacity: '1'
+          },
           '20%': {
-            transform: 'translateY(-100px) translateX(20px) scale(0.9)',
+            transform: 'translateY(-90px) translateX(28px) scale(0.9)',
+            opacity: '1'
+          },
+          '30%': {
+            transform: 'translateY(-120px) translateX(40px) scale(0.85)',
+            opacity: '1'
+          },
+          '40%': {
+            transform: 'translateY(-135px) translateX(50px) scale(0.82)',
             opacity: '1'
           },
           '50%': {
-            transform: 'translateY(-150px) translateX(50px) scale(0.8)',
+            transform: 'translateY(-140px) translateX(58px) scale(0.8)',
+            opacity: '1'
+          },
+          '60%': {
+            transform: 'translateY(-130px) translateX(64px) scale(0.82)',
+            opacity: '1'
+          },
+          '70%': {
+            transform: 'translateY(-105px) translateX(67px) scale(0.86)',
             opacity: '1'
           },
           '80%': {
-            transform: 'translateY(-50px) translateX(30px) scale(0.95)',
+            transform: 'translateY(-65px) translateX(66px) scale(0.92)',
+            opacity: '1'
+          },
+          '90%': {
+            transform: 'translateY(-20px) translateX(58px) scale(0.97)',
+            opacity: '1'
+          },
+          '95%': {
+            transform: 'translateY(-5px) translateX(48px) scale(0.99)',
             opacity: '1'
           },
           '100%': {
             transform: 'translateY(0px) translateX(0px) scale(1)',
             opacity: '1'
+          }
+        },
+        // 落地弹跳效果
+        coinBounce: {
+          '0%': {
+            transform: 'translateY(0px) scale(1)',
+          },
+          '20%': {
+            transform: 'translateY(-8px) scale(1.02, 0.98)',
+          },
+          '40%': {
+            transform: 'translateY(-12px) scale(1.01, 0.99)',
+          },
+          '60%': {
+            transform: 'translateY(-6px) scale(1.005, 0.995)',
+          },
+          '80%': {
+            transform: 'translateY(-2px) scale(1.002, 0.998)',
+          },
+          '100%': {
+            transform: 'translateY(0px) scale(1)',
           }
         },
         // 动态光晕脉动
