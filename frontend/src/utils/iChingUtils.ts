@@ -15,25 +15,25 @@ export interface HexagramInfo {
 
 // 增强爻辞接口
 export interface EnhancedYaoCi {
-  position: number;      // 爻位 (1-6)
-  original: string;      // 原始爻辞
-  translation: string;   // 现代翻译
+  position: number; // 爻位 (1-6)
+  original: string; // 原始爻辞
+  translation: string; // 现代翻译
   interpretation: string; // 基础解释
 
   // 分类引导（简短，1-2句话）
   categoryGuidance: {
-    career: string;       // 事业引导
-    finance: string;      // 财运引导
+    career: string; // 事业引导
+    finance: string; // 财运引导
     relationship: string; // 感情引导
-    health: string;       // 健康引导
-    general: string;      // 通用引导
+    health: string; // 健康引导
+    general: string; // 通用引导
   };
 
   // 古籍参考
   references?: {
-    source: string;       // 出处
-    text: string;         // 相关原文
-    note: string;         // 说明
+    source: string; // 出处
+    text: string; // 相关原文
+    note: string; // 说明
   }[];
 }
 
@@ -42,20 +42,20 @@ export interface EnhancedHexagramInfo {
   // 基础信息
   key: string;
   name: string;
-  nameAlt?: string;      // 别名，如"乾"又称"天"
+  nameAlt?: string; // 别名，如"乾"又称"天"
   pinyin: string;
-  number: number;        // 卦序 (1-64)
+  number: number; // 卦序 (1-64)
 
   // 出处信息
   source: {
-    book: string;        // 出自《周易·上经》等
-    chapter: string;     // 具体章节
-    position: number;    // 在该章节的位置
+    book: string; // 出自《周易·上经》等
+    chapter: string; // 具体章节
+    position: number; // 在该章节的位置
   };
 
   // 卦辞信息
   guaCi: {
-    original: string;    // 原始卦辞
+    original: string; // 原始卦辞
     translation: string; // 现代翻译
     interpretation: string; // 基础解释
   };
@@ -67,25 +67,25 @@ export interface EnhancedHexagramInfo {
   structure: {
     upperTrigram: string; // 上卦
     lowerTrigram: string; // 下卦
-    symbol: string;       // 卦象象征
+    symbol: string; // 卦象象征
   };
 
   // 古籍参考
   references: {
-    book: string;         // 古籍名称
-    quote: string;        // 相关原文
-    explanation: string;  // 解释说明
+    book: string; // 古籍名称
+    quote: string; // 相关原文
+    explanation: string; // 解释说明
   }[];
 
   // 更新追踪
   lastUpdated: string;
   version: string;
-  notes?: string;        // 更新说明
+  notes?: string; // 更新说明
 }
 
 // 解读状态管理接口
 export interface InterpretationState {
-  stage: 'loading' | 'interpreting' | 'completed' | 'error';
+  stage: "loading" | "interpreting" | "completed" | "error";
   message: string;
   progress?: number;
   tips?: string[];
@@ -96,8 +96,8 @@ export interface DatabaseVersion {
   version: string;
   updateDate: string;
   changes: {
-    type: 'add' | 'update' | 'delete';
-    target: string;  // 修改目标
+    type: "add" | "update" | "delete";
+    target: string; // 修改目标
     description: string; // 修改说明
   }[];
 }
@@ -108,7 +108,7 @@ export const LOADING_MESSAGES = [
   "正在连接古老的智慧，请稍候片刻...",
   "卦象正在显现，马上就能为您解读了...",
   "小卜正在潜心研究您的卦象，耐心等一下~",
-  "千年易经智慧即将呈现，请稍等片刻..."
+  "千年易经智慧即将呈现，请稍等片刻...",
 ];
 
 // 解读小贴士
@@ -116,7 +116,7 @@ export const INTERPRETATION_TIPS = [
   "易经解读需要结合具体问题来理解",
   "好的心态有助于更好地理解卦象寓意",
   "古人说：心诚则灵，静心等待答案",
-  "每一卦都蕴含着深刻的人生哲理"
+  "每一卦都蕴含着深刻的人生哲理",
 ];
 
 // 占卜类型映射
@@ -125,13 +125,16 @@ export const DIVINATION_CATEGORIES = {
   finance: "财运",
   relationship: "感情",
   health: "健康",
-  general: "综合"
+  general: "综合",
 } as const;
 
 export type DivinationCategory = keyof typeof DIVINATION_CATEGORIES;
 
 // 卦象基础信息扩展数据
-export const HEXAGRAM_ENHANCED_INFO: Record<string, Partial<EnhancedHexagramInfo>> = {
+export const HEXAGRAM_ENHANCED_INFO: Record<
+  string,
+  Partial<EnhancedHexagramInfo>
+> = {
   "111111": {
     // 乾卦
     nameAlt: "天",
@@ -139,15 +142,93 @@ export const HEXAGRAM_ENHANCED_INFO: Record<string, Partial<EnhancedHexagramInfo
     source: {
       book: "周易·上经",
       chapter: "第一卦",
-      position: 1
+      position: 1,
     },
+    guaCi: {
+      original: "元，亨，利，贞。",
+      translation: "乾卦象征天，具有创始、通达、和谐、正固四种品德。",
+      interpretation:
+        "乾卦代表天，象征着刚健、主动、创造的力量。君子应当效法天的刚健精神，自强不息，永远保持积极向上的态度。",
+    },
+    yaoCi: [
+      {
+        position: 1,
+        original: "初九：潜龙，勿用。",
+        translation: "龙潜伏在深渊，暂时不宜有所作为。",
+        interpretation: "时机未到，应当隐忍待时，积累实力，不宜轻举妄动。",
+        categoryGuidance: {
+          career: "事业发展初期，需要潜心学习，积累经验，不要急于求成。",
+          finance: "投资理财需要谨慎，暂时观望，等待更好的时机。",
+          relationship: "感情处于萌芽阶段，需要时间培养，不要急于表达。",
+          health: "注意调养身体，避免过度劳累，为长远健康打下基础。",
+          general: "当前时机尚早，需要耐心等待，做好充分准备。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "潜龙，勿用。阳在下也。勿用，勿可用也。",
+            note: "初九爻位最低，阳气尚微，如龙潜伏深渊，不可轻用。",
+          },
+          {
+            source: "《伊川易传》程颐",
+            text: "潜龙勿用，阳之始也。龙之德，变化不测，故以龙言之。",
+            note: "程颐认为此爻象征阳气初生，虽然具有龙的德性，但时机未到。",
+          },
+        ],
+      },
+      {
+        position: 2,
+        original: "九二：见龙在田，利见大人。",
+        translation: "龙出现在田野上，有利于拜见大人。",
+        interpretation: "时机渐显，应该开始展现才能，寻求有德之人的指导。",
+        categoryGuidance: {
+          career: "事业开始有起色，可以展现能力，寻求贵人相助。",
+          finance: "财务状况改善，可以适度投资，但需要专业人士指导。",
+          relationship: "感情明朗化，适合表达心意，寻求长辈认可。",
+          health: "身体状况良好，适合开始养生计划。",
+          general: "时机逐渐成熟，可以开始行动，寻求指导帮助。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "见龙在田，德施普也。利见大人，君德也。",
+            note: "九二居中得正，如龙出现在田野，恩德开始广施。",
+          },
+          {
+            source: "《程氏易传》程颢",
+            text: "见龙在田，时之中也。大人者，圣人也。",
+            note: "程颢强调时机的重要性，认为此时正是见圣人的好时机。",
+          },
+        ],
+      },
+    ],
     structure: {
       upperTrigram: "乾（天）",
       lowerTrigram: "乾（天）",
-      symbol: "天行健，君子以自强不息"
+      symbol: "天行健，君子以自强不息",
     },
+    references: [
+      {
+        book: "《周易正义》",
+        quote:
+          "乾，元亨利贞。乾者，天也。天者，形也；乾者，用也。天以健为用，故曰乾。",
+        explanation:
+          "孔颖达解释乾卦的含义，强调天的刚健特性，说明乾卦代表天的功用。",
+      },
+      {
+        book: "《伊川易传》",
+        quote: "乾，健也。天行健，君子以自强不息。乾道变化，各正性命。",
+        explanation: "程颐从理学角度解释乾卦，强调君子应当效法天的刚健精神。",
+      },
+      {
+        book: "《周易本义》",
+        quote: "乾者，健也。天体以健为用，故其德为健。君子法天，故自强不息。",
+        explanation: "朱熹解释乾卦的哲学意义，阐明天人合一的思想。",
+      },
+    ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0"
+    version: "v1.0.0",
+    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
   },
   "000000": {
     // 坤卦
@@ -156,15 +237,97 @@ export const HEXAGRAM_ENHANCED_INFO: Record<string, Partial<EnhancedHexagramInfo
     source: {
       book: "周易·上经",
       chapter: "第二卦",
-      position: 2
+      position: 2,
     },
+    guaCi: {
+      original:
+        "元，亨，利牝马之贞。君子有攸往，先迷后得主，利西南得朋，东北丧朋。安贞，吉。",
+      translation:
+        "坤卦象征地，具有包容、柔顺、承载的美德。如母马般柔顺，坚守正道。",
+      interpretation:
+        "坤卦代表地，象征着柔顺、包容、承载的力量。君子应当效法地的厚德，以宽广的胸怀承载万物，以柔顺的态度处世。",
+    },
+    yaoCi: [
+      {
+        position: 1,
+        original: "初六：履霜，坚冰至。",
+        translation: "脚下踏着霜，坚硬的冰雪时节即将到来。",
+        interpretation:
+          "见微知著，防微杜渐。从小的征兆预见到大的趋势，及早做好准备。",
+        categoryGuidance: {
+          career:
+            "工作中要注意细节问题，及时发现并解决，避免小问题演变成大危机。",
+          finance: "财务状况出现微小变化时，要及时调整策略，防止出现大的损失。",
+          relationship: "感情中的小矛盾要及时沟通，不要等到问题严重化才处理。",
+          health: "身体出现轻微不适时，要及时就医，预防疾病发展。",
+          general: "要善于观察细节，从小的征兆预见未来的发展趋势。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "履霜坚冰至，阴始凝也。驯致其道，至坚冰也。",
+            note: "孔颖达指出此爻说明阴气开始凝结，循序渐进终将结成坚冰。",
+          },
+          {
+            source: "《伊川易传》程颐",
+            text: "履霜坚冰至，阴之始也。驯者，顺也。驯致其道，理自然也。",
+            note: "程颐强调见微知著的道理，认为这是事物发展的自然规律。",
+          },
+        ],
+      },
+      {
+        position: 2,
+        original: "六二：直，方，大，不习无不利。",
+        translation: "正直、方正、宏大，即使不熟悉也无不利。",
+        interpretation:
+          "具备正直、方正、宏大的品德，自然能够顺利，不需要刻意学习。",
+        categoryGuidance: {
+          career: "保持正直品格，做事方正，胸怀大志，事业发展自然顺利。",
+          finance: "理财要正直诚信，方法要正大光明，不投机取巧也能获利。",
+          relationship: "待人要真诚直率，品行端正，有宽阔胸怀，感情自然美满。",
+          health: "保持正直的心态，生活要有规律，胸怀宽广，身体健康。",
+          general: "培养正直、方正、宏大的品格，这是成功的基础。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "六二之动，直以方也。不习无不利，地道光也。",
+            note: "六二居中得正，具有直方大的品德，合乎地道的光明。",
+          },
+          {
+            source: "《程氏易传》程颢",
+            text: "直方大，不习无不利，德之盛也。",
+            note: "程颢认为直方大是美德的体现，有此德者不学而能。",
+          },
+        ],
+      },
+    ],
     structure: {
       upperTrigram: "坤（地）",
       lowerTrigram: "坤（地）",
-      symbol: "地势坤，君子以厚德载物"
+      symbol: "地势坤，君子以厚德载物",
     },
+    references: [
+      {
+        book: "《周易正义》",
+        quote: "坤，元亨，利牝马之贞。坤者，地也。地以顺为德，故曰坤。",
+        explanation:
+          "孔颖达解释坤卦的含义，强调地的柔顺特性，说明坤卦代表地的德性。",
+      },
+      {
+        book: "《伊川易传》",
+        quote: "坤，顺也。地势坤，君子以厚德载物。坤道成女，故称母。",
+        explanation: "程颐从理学角度解释坤卦，强调君子应当效法地的厚德。",
+      },
+      {
+        book: "《周易本义》",
+        quote: "坤者，顺也。地体以顺为用，故其德为顺。君子法地，故厚德载物。",
+        explanation: "朱熹解释坤卦的哲学意义，阐明了柔顺包容的美德。",
+      },
+    ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0"
+    version: "v1.0.0",
+    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
   },
   "010111": {
     // 需卦
@@ -173,15 +336,95 @@ export const HEXAGRAM_ENHANCED_INFO: Record<string, Partial<EnhancedHexagramInfo
     source: {
       book: "周易·上经",
       chapter: "第五卦",
-      position: 5
+      position: 5,
     },
+    guaCi: {
+      original: "有孚，光亨，贞吉。利涉大川。",
+      translation:
+        "需卦象征等待，心怀诚信，光明通达，坚守正道可获吉祥。利于渡过大江大河。",
+      interpretation:
+        "需卦代表等待的智慧，虽然前方有险阻，但只要心怀诚信，耐心等待时机，最终能够克服困难，达成目标。",
+    },
+    yaoCi: [
+      {
+        position: 1,
+        original: "初九：需于郊，利用恒，无咎。",
+        translation: "在郊野等待，宜于持之以恒，没有灾害。",
+        interpretation:
+          "时机未到，应该在适当的地方耐心等待，保持恒心，不会有过错。",
+        categoryGuidance: {
+          career: "事业发展需要耐心，在当前位置持之以恒，等待更好的时机。",
+          finance: "投资需要耐心等待，不要急于求成，保持长期投资理念。",
+          relationship:
+            "感情需要时间培养，在现有基础上耐心发展，不要急于推进。",
+          health: "身体健康需要长期调理，坚持养生习惯，不要期望立竿见影。",
+          general: "在合适的时机保持耐心，持之以恒地等待机会。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "需于郊，不犯难行也。利用恒，未失常也。",
+            note: "孔颖达认为在郊野等待可以避免冒险，持之以恒能保持正常状态。",
+          },
+          {
+            source: "《伊川易传》程颐",
+            text: "需者，须也。物皆须待而后成，故需之义大矣哉。",
+            note: "程颐解释需卦的意义，强调万物都需要等待时机才能成功。",
+          },
+        ],
+      },
+      {
+        position: 5,
+        original: "九五：需于酒食，贞吉。",
+        translation: "在酒食中等待，坚守正道可获吉祥。",
+        interpretation:
+          "时机成熟，可以在安乐的环境中等待，但仍然要保持正道，这样就能获得吉祥。",
+        categoryGuidance: {
+          career: "事业进入稳定期，可以在良好环境中继续发展，但要坚持正道。",
+          finance: "财务状况良好，可以享受生活，但仍要保持理性投资。",
+          relationship: "感情稳定发展，可以在温馨中享受爱情，但要真诚相待。",
+          health: "身体健康，可以享受生活，但要保持良好的生活习惯。",
+          general: "在安乐中保持正道，享受等待的果实。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "需于酒食，贞吉也。酒食者，德之所养也。",
+            note: "孔颖达认为酒食是培养德性的环境，在安乐中也要坚守正道。",
+          },
+          {
+            source: "《程氏易传》程颢",
+            text: "酒食者，所以养人者也。需于此而得其正，故吉。",
+            note: "程颢解释酒食的作用，强调在安乐环境中坚守正道的重要性。",
+          },
+        ],
+      },
+    ],
     structure: {
       upperTrigram: "坎（水）",
       lowerTrigram: "乾（天）",
-      symbol: "云上于天，需；君子以饮食宴乐"
+      symbol: "云上于天，需；君子以饮食宴乐",
     },
+    references: [
+      {
+        book: "《周易正义》",
+        quote: "需，须也。险在前也，刚健而不陷，其义不困穷矣。",
+        explanation: "孔颖达解释需卦的含义，强调面对险阻时保持刚健不陷的品格。",
+      },
+      {
+        book: "《伊川易传》",
+        quote: "需，须也。以刚健之德，需待之时，故能光亨而吉。",
+        explanation: "程颐从理学角度解释需卦，强调刚健品德在等待时的重要性。",
+      },
+      {
+        book: "《周易本义》",
+        quote: "需者，等待之义。刚健而能待，故能光亨贞吉。",
+        explanation: "朱熹解释需卦的哲学意义，阐明刚健与等待相结合的智慧。",
+      },
+    ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0"
+    version: "v1.0.0",
+    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
   },
   "011111": {
     // 夬卦
@@ -190,16 +433,95 @@ export const HEXAGRAM_ENHANCED_INFO: Record<string, Partial<EnhancedHexagramInfo
     source: {
       book: "周易·下经",
       chapter: "第四十三卦",
-      position: 43
+      position: 43,
     },
+    guaCi: {
+      original: "扬于王庭，孚号有厉，告自邑，不利即戎，利有攸往。",
+      translation:
+        "在王庭上宣布，心怀诚信地号召有危险，告知自己城邑的人，不宜立即动武，但利于有所前往。",
+      interpretation:
+        "夬卦象征决断、果决。面对邪恶势力，应当果断处理，但要以诚信为本，不宜轻启战端，要以德服人。",
+    },
+    yaoCi: [
+      {
+        position: 1,
+        original: "初九：壮于前趾，往不胜为吝。",
+        translation: "脚前趾受伤冒进，前往不能取胜会有憾惜。",
+        interpretation: "冒进急躁，准备不充分，前往必然不能取胜，会有遗憾。",
+        categoryGuidance: {
+          career: "事业发展要循序渐进，不要冒进，准备充分再行动。",
+          finance: "投资理财要谨慎，不要冲动决策，充分研究后再行动。",
+          relationship: "感情发展要自然，不要急于求成，给彼此充分了解的时间。",
+          health: "健康管理要有计划，不要过度运动，循序渐进更有效。",
+          general: "凡事要准备充分，不要冒进，循序渐进才能成功。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "壮于前趾，其行不远也。往不胜为吝，咎不长也。",
+            note: "孔颖达认为只顾前进而不顾后果，行动不能持久，必有憾惜。",
+          },
+          {
+            source: "《伊川易传》程颐",
+            text: "壮者，伤也。伤于前趾，是冒进之象也。",
+            note: "程颐解释'壮'为'伤'的意思，认为这是冒进受伤的象征。",
+          },
+        ],
+      },
+      {
+        position: 5,
+        original: "九五：苋陆夬夬，中行无咎。",
+        translation: "像苋陆草那样果断地决断，居中而行没有灾害。",
+        interpretation:
+          "应当像苋陆草那样柔韧而坚定地决断，持中而行，公正无私，就不会有过错。",
+        categoryGuidance: {
+          career: "决策时要柔韧而坚定，持中而行，不偏不倚，事业发展顺利。",
+          finance: "理财要平衡风险与收益，持中而行，不贪不惧，财务稳定。",
+          relationship: "处理感情问题要刚柔相济，持中而行，关系和谐。",
+          health: "健康管理要平衡运动与休息，持中而行，身体健康。",
+          general: "决策要柔韧而坚定，持中而行，不偏不倚方能成功。",
+        },
+        references: [
+          {
+            source: "《周易正义》孔颖达",
+            text: "苋陆夬夬，中行无咎，中未光也。",
+            note: "孔颖达认为居中而行虽然无咎，但中道尚未光大，需要继续努力。",
+          },
+          {
+            source: "《程氏易传》程颢",
+            text: "苋陆者，柔中之草也。夬夬者，决而不留也。",
+            note: "程颢解释苋陆草的特性，强调柔韧而果断的品质。",
+          },
+        ],
+      },
+    ],
     structure: {
       upperTrigram: "兑（泽）",
       lowerTrigram: "乾（天）",
-      symbol: "泽上于天，夬；君子以施禄及下"
+      symbol: "泽上于天，夬；君子以施禄及下",
     },
+    references: [
+      {
+        book: "《周易正义》",
+        quote: "夬，决也。刚决柔也，君子道长，小人道忧也。",
+        explanation:
+          "孔颖达解释夬卦的含义，强调刚决柔的品格，君子道长而小人道消。",
+      },
+      {
+        book: "《伊川易传》",
+        quote: "夬者，决也。以刚决柔，以君子决小人，其势然也。",
+        explanation: "程颐从理学角度解释夬卦，强调君子决断小人的必然性。",
+      },
+      {
+        book: "《周易本义》",
+        quote: "夬者，决也。阳决阴，君子决小人，以正道也。",
+        explanation: "朱熹解释夬卦的哲学意义，阐明以正道决断邪恶的重要性。",
+      },
+    ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0"
-  }
+    version: "v1.0.0",
+    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
+  },
 };
 
 // 64卦完整数据库
@@ -1440,18 +1762,18 @@ export const getEnhancedHexagramInfo = (
     guaCi: {
       original: basicInfo.guaCi,
       translation: enhancedInfo?.guaCi?.translation || "暂无现代翻译",
-      interpretation: enhancedInfo?.guaCi?.interpretation || "暂无基础解释"
+      interpretation: enhancedInfo?.guaCi?.interpretation || "暂无基础解释",
     },
     yaoCi: enhancedInfo?.yaoCi || [],
     structure: enhancedInfo?.structure || {
       upperTrigram: "未知",
       lowerTrigram: "未知",
-      symbol: "暂无象征说明"
+      symbol: "暂无象征说明",
     },
     source: enhancedInfo?.source || {
       book: "《周易》",
       chapter: "未知章节",
-      position: 1
+      position: 1,
     },
     references: enhancedInfo?.references || [],
     lastUpdated: enhancedInfo?.lastUpdated || new Date().toISOString(),
@@ -1460,7 +1782,7 @@ export const getEnhancedHexagramInfo = (
     // 确保必需的字段有默认值
     pinyin: enhancedInfo?.pinyin || basicInfo.pinyin || "未知",
     number: enhancedInfo?.number || basicInfo.number || 0,
-    nameAlt: enhancedInfo?.nameAlt || basicInfo.name
+    nameAlt: enhancedInfo?.nameAlt || basicInfo.name,
   };
 };
 
@@ -1482,7 +1804,9 @@ export const getHexagramSource = (hexagramKey: string): string | undefined => {
  * @param hexagramKey 卦象的二进制key
  * @returns 结构信息
  */
-export const getHexagramStructure = (hexagramKey: string): string | undefined => {
+export const getHexagramStructure = (
+  hexagramKey: string,
+): string | undefined => {
   const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
   return enhancedInfo?.structure?.symbol;
 };
@@ -1515,7 +1839,7 @@ export const getRandomInterpretationTip = (): string => {
 export const getCategoryGuidance = (
   hexagramKey: string,
   yaoPosition: number,
-  category: DivinationCategory
+  category: DivinationCategory,
 ): string => {
   const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
   const yaoCi = enhancedInfo?.yaoCi?.[yaoPosition];
@@ -1535,14 +1859,14 @@ export const getCategoryGuidance = (
  * @returns 解读状态对象
  */
 export const createInterpretationState = (
-  stage: InterpretationState['stage'],
-  progress?: number
+  stage: InterpretationState["stage"],
+  progress?: number,
 ): InterpretationState => {
   return {
     stage,
     message: getRandomLoadingMessage(),
     progress,
-    tips: [getRandomInterpretationTip()]
+    tips: [getRandomInterpretationTip()],
   };
 };
 
@@ -1554,15 +1878,312 @@ export const createInterpretationState = (
  */
 export const getBasicCategoryGuidance = (
   hexagramName: string,
-  category: DivinationCategory
+  category: DivinationCategory,
 ): string => {
   const guidanceMap: Record<DivinationCategory, string> = {
     career: `关于${hexagramName}卦，此卦象对您的事业发展提供了重要指引，建议您结合当前的工作状况来理解其深层含义。`,
     finance: `关于${hexagramName}卦，此卦象与财运相关，提醒您在财务决策上需要谨慎考虑，遵循卦象的智慧指导。`,
     relationship: `关于${hexagramName}卦，此卦象揭示了人际关系或感情状况的发展趋势，建议您用心体会其中的情感智慧。`,
     health: `关于${hexagramName}卦，此卦象与健康养生有关，提醒您关注身体信号，顺应自然规律来调养身心。`,
-    general: `关于${hexagramName}卦，此卦象蕴含着深刻的人生哲理，建议您静心思考，将其智慧应用到实际生活中。`
+    general: `关于${hexagramName}卦，此卦象蕴含着深刻的人生哲理，建议您静心思考，将其智慧应用到实际生活中。`,
   };
 
   return guidanceMap[category] || guidanceMap.general;
+};
+
+// =============== 第二阶段：古籍查询功能 ===============
+
+/**
+ * 获取卦象的古籍参考信息
+ * @param hexagramKey 卦象的二进制key
+ * @returns 古籍参考数组，如果没有则返回空数组
+ */
+export const getHexagramReferences = (
+  hexagramKey: string,
+): {
+  book: string;
+  quote: string;
+  explanation: string;
+}[] => {
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
+  return enhancedInfo?.references || [];
+};
+
+/**
+ * 获取爻辞的古籍参考信息
+ * @param hexagramKey 卦象的二进制key
+ * @param yaoPosition 爻位 (1-6)
+ * @returns 爻辞古籍参考数组，如果没有则返回空数组
+ */
+export const getYaoReferences = (
+  hexagramKey: string,
+  yaoPosition: number,
+): {
+  source: string;
+  text: string;
+  note: string;
+}[] => {
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
+  const yaoCi = enhancedInfo?.yaoCi?.find(
+    (yao) => yao.position === yaoPosition,
+  );
+  return yaoCi?.references || [];
+};
+
+/**
+ * 格式化古籍引用显示
+ * @param references 古籍参考数组
+ * @param maxCount 最大显示数量，默认为3个
+ * @returns 格式化后的HTML字符串
+ */
+export const formatReferences = (
+  references: {
+    book: string;
+    quote: string;
+    explanation: string;
+  }[],
+  maxCount: number = 3,
+): string => {
+  if (!references || references.length === 0) {
+    return "";
+  }
+
+  const displayReferences = references.slice(0, maxCount);
+
+  return displayReferences
+    .map(
+      (ref) => `
+      <div class="mb-4 p-4 bg-midnight-800/50 rounded-lg border border-amber-500/20">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="text-amber-400 font-medium">📚</span>
+          </div>
+          <div class="ml-3 flex-1">
+            <div class="text-amber-300 font-medium mb-1">${ref.book}</div>
+            <blockquote class="text-midnight-200 italic mb-2 border-l-2 border-amber-500 pl-3">
+              "${ref.quote}"
+            </blockquote>
+            <div class="text-midnight-300 text-sm">${ref.explanation}</div>
+          </div>
+        </div>
+      </div>
+    `,
+    )
+    .join("");
+};
+
+/**
+ * 格式化爻辞古籍引用显示
+ * @param references 爻辞古籍参考数组
+ * @param maxCount 最大显示数量，默认为2个
+ * @returns 格式化后的HTML字符串
+ */
+export const formatYaoReferences = (
+  references: {
+    source: string;
+    text: string;
+    note: string;
+  }[],
+  maxCount: number = 2,
+): string => {
+  if (!references || references.length === 0) {
+    return "";
+  }
+
+  const displayReferences = references.slice(0, maxCount);
+
+  return displayReferences
+    .map(
+      (ref) => `
+      <div class="mb-3 p-3 bg-midnight-800/30 rounded-lg border border-primary-500/10">
+        <div class="flex items-start">
+          <div class="flex-shrink-0">
+            <span class="text-primary-400 font-medium">📖</span>
+          </div>
+          <div class="ml-2 flex-1">
+            <div class="text-primary-300 text-sm font-medium mb-1">${ref.source}</div>
+            <div class="text-midnight-200 text-sm italic mb-1">
+              "${ref.text}"
+            </div>
+            <div class="text-midnight-400 text-xs">${ref.note}</div>
+          </div>
+        </div>
+      </div>
+    `,
+    )
+    .join("");
+};
+
+/**
+ * 搜索古籍中的相关内容
+ * @param keyword 搜索关键词
+ * @param searchScope 搜索范围：'gua'（卦辞）或 'yao'（爻辞）
+ * @returns 包含关键词的古籍引用数组
+ */
+export const searchAncientTexts = (
+  keyword: string,
+  searchScope: "gua" | "yao" | "all" = "gua",
+): {
+  hexagramKey: string;
+  hexagramName: string;
+  book: string;
+  quote: string;
+  explanation: string;
+  type: "gua" | "yao";
+  position?: number;
+}[] => {
+  const results: {
+    hexagramKey: string;
+    hexagramName: string;
+    book: string;
+    quote: string;
+    explanation: string;
+    type: "gua" | "yao";
+    position?: number;
+  }[] = [];
+
+  const searchTerm = keyword.toLowerCase().trim();
+
+  if (!searchTerm) {
+    return results;
+  }
+
+  // 搜索卦象的古籍引用
+  if (searchScope === "gua" || searchScope === "all") {
+    Object.entries(HEXAGRAM_ENHANCED_INFO).forEach(([key, info]) => {
+      if (info.references) {
+        info.references.forEach((ref) => {
+          if (
+            ref.book.toLowerCase().includes(searchTerm) ||
+            ref.quote.toLowerCase().includes(searchTerm) ||
+            ref.explanation.toLowerCase().includes(searchTerm)
+          ) {
+            results.push({
+              hexagramKey: key,
+              hexagramName: info.name || "未知",
+              book: ref.book,
+              quote: ref.quote,
+              explanation: ref.explanation,
+              type: "gua",
+            });
+          }
+        });
+      }
+    });
+  }
+
+  // 搜索爻辞的古籍引用
+  if (searchScope === "yao" || searchScope === "all") {
+    Object.entries(HEXAGRAM_ENHANCED_INFO).forEach(([key, info]) => {
+      if (info.yaoCi) {
+        info.yaoCi.forEach((yao) => {
+          if (yao.references) {
+            yao.references.forEach((ref) => {
+              if (
+                ref.source.toLowerCase().includes(searchTerm) ||
+                ref.text.toLowerCase().includes(searchTerm) ||
+                ref.note.toLowerCase().includes(searchTerm)
+              ) {
+                results.push({
+                  hexagramKey: key,
+                  hexagramName: info.name || "未知",
+                  book: ref.source,
+                  quote: ref.text,
+                  explanation: ref.note,
+                  type: "yao",
+                  position: yao.position,
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  return results;
+};
+
+/**
+ * 获取古籍来源统计信息
+ * @returns 按古籍名称统计的使用次数
+ */
+export const getAncientBookStats = (): Record<string, number> => {
+  const stats: Record<string, number> = {};
+
+  // 统计卦象引用的古籍
+  Object.values(HEXAGRAM_ENHANCED_INFO).forEach((info) => {
+    if (info.references) {
+      info.references.forEach((ref) => {
+        stats[ref.book] = (stats[ref.book] || 0) + 1;
+      });
+    }
+
+    // 统计爻辞引用的古籍
+    if (info.yaoCi) {
+      info.yaoCi.forEach((yao) => {
+        if (yao.references) {
+          yao.references.forEach((ref) => {
+            stats[ref.source] = (stats[ref.source] || 0) + 1;
+          });
+        }
+      });
+    }
+  });
+
+  return stats;
+};
+
+/**
+ * 验证古籍引用的完整性
+ * @param hexagramKey 卦象key
+ * @returns 验证结果对象
+ */
+export const validateReferences = (
+  hexagramKey: string,
+): {
+  isValid: boolean;
+  missingElements: string[];
+  warnings: string[];
+} => {
+  const result = {
+    isValid: true,
+    missingElements: [] as string[],
+    warnings: [] as string[],
+  };
+
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
+
+  if (!enhancedInfo) {
+    result.isValid = false;
+    result.missingElements.push("卦象增强信息不存在");
+    return result;
+  }
+
+  // 检查卦辞引用
+  if (!enhancedInfo.references || enhancedInfo.references.length === 0) {
+    result.warnings.push("缺少卦辞古籍引用");
+  }
+
+  // 检查爻辞引用
+  if (!enhancedInfo.yaoCi || enhancedInfo.yaoCi.length === 0) {
+    result.warnings.push("缺少爻辞信息");
+  } else {
+    enhancedInfo.yaoCi.forEach((yao) => {
+      if (!yao.references || yao.references.length === 0) {
+        result.warnings.push(`第${yao.position}爻缺少古籍引用`);
+      }
+    });
+  }
+
+  // 检查必需字段
+  const requiredFields = ["name", "pinyin", "source"];
+  requiredFields.forEach((field) => {
+    if (!enhancedInfo[field as keyof typeof enhancedInfo]) {
+      result.isValid = false;
+      result.missingElements.push(`缺少必需字段: ${field}`);
+    }
+  });
+
+  return result;
 };
