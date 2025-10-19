@@ -102,6 +102,34 @@ export interface DatabaseVersion {
   }[];
 }
 
+// 数据版本控制管理器接口
+export interface VersionControlManager {
+  currentVersion: string;
+  updateHistory: DatabaseVersion[];
+  lastCheckDate: string;
+}
+
+// 数据验证报告接口
+export interface ValidationReport {
+  isValid: boolean;
+  errorCount: number;
+  warningCount: number;
+  errors: string[];
+  warnings: string[];
+  checkedDate: string;
+  checkedVersion: string;
+}
+
+// 数据覆盖率统计接口
+export interface DataCoverageReport {
+  totalHexagrams: number;
+  enhancedHexagrams: number;
+  hexagramsWithReferences: number;
+  hexagramsWithYaoDetails: number;
+  coveragePercentage: number;
+  lastUpdated: string;
+}
+
 // 友好的加载提示信息
 export const LOADING_MESSAGES = [
   "小卜正在为您加速解卦，稍稍等我一下噢~",
@@ -227,8 +255,8 @@ export const HEXAGRAM_ENHANCED_INFO: Record<
       },
     ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0",
-    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
+    version: "v1.2.0",
+    notes: "第三阶段：数据版本管理和质量控制系统",
   },
   "000000": {
     // 坤卦
@@ -326,8 +354,8 @@ export const HEXAGRAM_ENHANCED_INFO: Record<
       },
     ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0",
-    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
+    version: "v1.2.0",
+    notes: "第三阶段：数据版本管理和质量控制系统",
   },
   "010111": {
     // 需卦
@@ -423,8 +451,8 @@ export const HEXAGRAM_ENHANCED_INFO: Record<
       },
     ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0",
-    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
+    version: "v1.2.0",
+    notes: "第三阶段：数据版本管理和质量控制系统",
   },
   "011111": {
     // 夬卦
@@ -519,8 +547,8 @@ export const HEXAGRAM_ENHANCED_INFO: Record<
       },
     ],
     lastUpdated: new Date().toISOString(),
-    version: "v1.0.0",
-    notes: "第二阶段：添加古籍参考信息和详细的爻辞注解",
+    version: "v1.2.0",
+    notes: "第三阶段：数据版本管理和质量控制系统",
   },
 };
 
@@ -2186,4 +2214,559 @@ export const validateReferences = (
   });
 
   return result;
+};
+
+// =============== 第三阶段：数据版本管理系统 ===============
+
+/**
+ * 当前数据库版本
+ */
+export const CURRENT_DATABASE_VERSION = "v1.2.0";
+
+/**
+ * 数据库版本更新历史记录
+ */
+export const DATABASE_VERSION_HISTORY: DatabaseVersion[] = [
+  {
+    version: "v1.0.0",
+    updateDate: "2024-01-01T00:00:00.000Z",
+    changes: [
+      {
+        type: "add",
+        target: "基础卦象数据库",
+        description: "建立完整的64卦基础数据库，包含卦名、卦辞、爻辞和卦序",
+      },
+      {
+        type: "add",
+        target: "查询功能",
+        description: "实现基本的卦象查询、爻位计算和变卦功能",
+      },
+    ],
+  },
+  {
+    version: "v1.1.0",
+    updateDate: "2024-01-15T00:00:00.000Z",
+    changes: [
+      {
+        type: "add",
+        target: "增强数据结构",
+        description: "扩展卦象信息接口，添加出处、结构、分类引导等字段",
+      },
+      {
+        type: "add",
+        target: "重要卦象增强",
+        description: "为乾、坤、需、夬四个重要卦象添加详细信息",
+      },
+    ],
+  },
+  {
+    version: "v1.2.0",
+    updateDate: "2024-02-01T00:00:00.000Z",
+    changes: [
+      {
+        type: "add",
+        target: "古籍参考系统",
+        description:
+          "添加《周易正义》、《伊川易传》、《程氏易传》、《周易本义》等古籍引用",
+      },
+      {
+        type: "add",
+        target: "数据版本管理",
+        description: "实现数据版本控制、验证和覆盖率统计功能",
+      },
+    ],
+  },
+];
+
+/**
+ * 版本控制管理器
+ */
+export const VERSION_CONTROL_MANAGER: VersionControlManager = {
+  currentVersion: CURRENT_DATABASE_VERSION,
+  updateHistory: DATABASE_VERSION_HISTORY,
+  lastCheckDate: new Date().toISOString(),
+};
+
+/**
+ * 检查数据库版本
+ * @returns 当前版本信息
+ */
+export const checkDatabaseVersion = (): DatabaseVersion => {
+  const currentVersion = DATABASE_VERSION_HISTORY.find(
+    (version) => version.version === CURRENT_DATABASE_VERSION,
+  );
+
+  if (!currentVersion) {
+    throw new Error(`当前版本 ${CURRENT_DATABASE_VERSION} 未在版本历史中找到`);
+  }
+
+  return currentVersion;
+};
+
+/**
+ * 获取版本更新历史
+ * @param maxCount 最大显示数量，默认为全部
+ * @returns 版本历史数组
+ */
+export const getVersionHistory = (maxCount?: number): DatabaseVersion[] => {
+  const history = [...DATABASE_VERSION_HISTORY].reverse(); // 最新的在前
+  return maxCount ? history.slice(0, maxCount) : history;
+};
+
+/**
+ * 验证数据库完整性
+ * @param targetVersion 目标版本，默认为当前版本
+ * @returns 验证报告
+ */
+export const validateDatabaseIntegrity = (
+  targetVersion?: string,
+): ValidationReport => {
+  const version = targetVersion || CURRENT_DATABASE_VERSION;
+  const report: ValidationReport = {
+    isValid: true,
+    errorCount: 0,
+    warningCount: 0,
+    errors: [],
+    warnings: [],
+    checkedDate: new Date().toISOString(),
+    checkedVersion: version,
+  };
+
+  try {
+    // 验证基础数据库完整性
+    if (Object.keys(HEXAGRAMS_DATA).length !== 64) {
+      report.isValid = false;
+      report.errors.push(
+        `基础卦象数据不完整，期望64个，实际${Object.keys(HEXAGRAMS_DATA).length}个`,
+      );
+      report.errorCount++;
+    }
+
+    // 验证增强数据覆盖率
+    const enhancedCount = Object.keys(HEXAGRAM_ENHANCED_INFO).length;
+    if (enhancedCount === 0) {
+      report.warnings.push("没有找到增强数据");
+      report.warningCount++;
+    } else if (enhancedCount < 10) {
+      report.warnings.push(`增强数据覆盖率较低，仅有${enhancedCount}个卦象`);
+      report.warningCount++;
+    }
+
+    // 验证古籍引用完整性
+    let referencesCount = 0;
+    let yaoReferencesCount = 0;
+
+    Object.values(HEXAGRAM_ENHANCED_INFO).forEach((info) => {
+      if (info.references && info.references.length > 0) {
+        referencesCount++;
+      }
+
+      if (info.yaoCi) {
+        info.yaoCi.forEach((yao) => {
+          if (yao.references && yao.references.length > 0) {
+            yaoReferencesCount++;
+          }
+        });
+      }
+    });
+
+    if (referencesCount === 0) {
+      report.warnings.push("没有找到卦象古籍引用");
+      report.warningCount++;
+    }
+
+    if (yaoReferencesCount === 0) {
+      report.warnings.push("没有找到爻辞古籍引用");
+      report.warningCount++;
+    }
+
+    // 验证必需字段
+    Object.entries(HEXAGRAM_ENHANCED_INFO).forEach(([key, info]) => {
+      const requiredFields = ["name", "version", "lastUpdated"];
+      requiredFields.forEach((field) => {
+        if (!info[field as keyof typeof info]) {
+          report.isValid = false;
+          report.errors.push(`卦象 ${key} 缺少必需字段: ${field}`);
+          report.errorCount++;
+        }
+      });
+    });
+
+    // 验证版本信息一致性
+    const versionInfos = Object.values(HEXAGRAM_ENHANCED_INFO);
+    const inconsistentVersions = versionInfos.filter(
+      (info) => info.version !== version,
+    );
+
+    if (inconsistentVersions.length > 0) {
+      report.warnings.push(
+        `${inconsistentVersions.length}个卦象的版本信息与当前版本不一致`,
+      );
+      report.warningCount++;
+    }
+  } catch (error) {
+    report.isValid = false;
+    report.errors.push(`验证过程中发生错误: ${error}`);
+    report.errorCount++;
+  }
+
+  return report;
+};
+
+/**
+ * 生成数据覆盖率报告
+ * @returns 覆盖率统计报告
+ */
+export const generateDataCoverageReport = (): DataCoverageReport => {
+  const totalHexagrams = Object.keys(HEXAGRAMS_DATA).length;
+  const enhancedHexagrams = Object.keys(HEXAGRAM_ENHANCED_INFO).length;
+
+  let hexagramsWithReferences = 0;
+  let hexagramsWithYaoDetails = 0;
+
+  Object.values(HEXAGRAM_ENHANCED_INFO).forEach((info) => {
+    if (info.references && info.references.length > 0) {
+      hexagramsWithReferences++;
+    }
+
+    if (info.yaoCi && info.yaoCi.length > 0) {
+      hexagramsWithYaoDetails++;
+    }
+  });
+
+  const coveragePercentage = Math.round(
+    (enhancedHexagrams / totalHexagrams) * 100,
+  );
+
+  return {
+    totalHexagrams,
+    enhancedHexagrams,
+    hexagramsWithReferences,
+    hexagramsWithYaoDetails,
+    coveragePercentage,
+    lastUpdated: new Date().toISOString(),
+  };
+};
+
+/**
+ * 检查数据更新需求
+ * @returns 建议更新的内容
+ */
+export const checkUpdateSuggestions = (): {
+  priority: "high" | "medium" | "low";
+  suggestions: string[];
+  estimatedWorkload: "small" | "medium" | "large";
+} => {
+  const suggestions: string[] = [];
+  let priority: "high" | "medium" | "low" = "low";
+
+  const coverage = generateDataCoverageReport();
+
+  // 检查覆盖率
+  if (coverage.coveragePercentage < 10) {
+    priority = "high";
+    suggestions.push(
+      `增强数据覆盖率仅为${coverage.coveragePercentage}%，急需扩展更多卦象信息`,
+    );
+  } else if (coverage.coveragePercentage < 30) {
+    priority = "medium";
+    suggestions.push(
+      `增强数据覆盖率为${coverage.coveragePercentage}%，建议扩展更多卦象`,
+    );
+  }
+
+  // 检查古籍引用
+  if (coverage.hexagramsWithReferences < 20) {
+    priority = priority === "high" ? "high" : "medium";
+    suggestions.push("古籍引用数量较少，建议增加更多权威注解");
+  }
+
+  // 检查爻辞详情
+  if (coverage.hexagramsWithYaoDetails < coverage.enhancedHexagrams) {
+    suggestions.push("部分增强卦象缺少爻辞详情，建议补充完善");
+  }
+
+  // 数据质量建议
+  const validation = validateDatabaseIntegrity();
+  if (validation.warningCount > 0) {
+    suggestions.push(`发现${validation.warningCount}个数据质量问题需要关注`);
+  }
+
+  // 功能扩展建议
+  suggestions.push("考虑增加更多占卜类型的分类引导");
+  suggestions.push("建议添加更多历史名家的易学注解");
+
+  const estimatedWorkload =
+    priority === "high" ? "large" : priority === "medium" ? "medium" : "small";
+
+  return {
+    priority,
+    suggestions,
+    estimatedWorkload,
+  };
+};
+
+/**
+ * 创建版本更新记录
+ * @param newVersion 新版本号
+ * @param changes 更改内容
+ * @returns 创建的版本记录
+ */
+export const createVersionRecord = (
+  newVersion: string,
+  changes: {
+    type: "add" | "update" | "delete";
+    target: string;
+    description: string;
+  }[],
+): DatabaseVersion => {
+  const newRecord: DatabaseVersion = {
+    version: newVersion,
+    updateDate: new Date().toISOString(),
+    changes,
+  };
+
+  return newRecord;
+};
+
+/**
+ * 格式化版本信息显示
+ * @param version 版本信息
+ * @returns 格式化的HTML字符串
+ */
+export const formatVersionInfo = (version: DatabaseVersion): string => {
+  const date = new Date(version.updateDate).toLocaleDateString("zh-CN");
+
+  return `
+    <div class="p-4 bg-midnight-800/50 rounded-lg border border-amber-500/20 mb-4">
+      <div class="flex items-center justify-between mb-3">
+        <h4 class="text-amber-300 font-semibold">${version.version}</h4>
+        <span class="text-midnight-400 text-sm">${date}</span>
+      </div>
+      <div class="space-y-2">
+        ${version.changes
+          .map(
+            (change) => `
+          <div class="flex items-start">
+            <span class="flex-shrink-0 mr-2 mt-1">
+              ${change.type === "add" ? "➕" : change.type === "update" ? "🔄" : "❌"}
+            </span>
+            <div>
+              <div class="text-midnight-200 font-medium">${change.target}</div>
+              <div class="text-midnight-400 text-sm">${change.description}</div>
+            </div>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+};
+
+/**
+ * 格式化数据覆盖率报告
+ * @param coverage 覆盖率报告
+ * @returns 格式化的HTML字符串
+ */
+export const formatCoverageReport = (coverage: DataCoverageReport): string => {
+  const date = new Date(coverage.lastUpdated).toLocaleDateString("zh-CN");
+
+  return `
+    <div class="p-6 bg-midnight-800/50 rounded-lg border border-primary-500/20">
+      <h4 class="text-primary-300 font-semibold mb-4">数据覆盖率统计</h4>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-amber-400">${coverage.totalHexagrams}</div>
+          <div class="text-midnight-400 text-sm">总卦象数</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-green-400">${coverage.enhancedHexagrams}</div>
+          <div class="text-midnight-400 text-sm">增强卦象</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-400">${coverage.hexagramsWithReferences}</div>
+          <div class="text-midnight-400 text-sm">古籍引用</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-purple-400">${coverage.coveragePercentage}%</div>
+          <div class="text-midnight-400 text-sm">覆盖率</div>
+        </div>
+      </div>
+      <div class="w-full bg-midnight-700 rounded-full h-4 mb-2">
+        <div class="bg-gradient-to-r from-amber-400 to-amber-600 h-4 rounded-full transition-all duration-1000"
+             style="width: ${coverage.coveragePercentage}%"></div>
+      </div>
+      <div class="text-midnight-400 text-sm text-center">
+        最后更新: ${date}
+      </div>
+    </div>
+  `;
+};
+
+/**
+ * 获取系统状态概览
+ * @returns 系统状态信息
+ */
+export const getSystemOverview = (): {
+  version: string;
+  dataQuality: "excellent" | "good" | "fair" | "poor";
+  coverage: DataCoverageReport;
+  validation: ValidationReport;
+  recommendations: string[];
+} => {
+  const coverage = generateDataCoverageReport();
+  const validation = validateDatabaseIntegrity();
+  const updateSuggestions = checkUpdateSuggestions();
+
+  // 评估数据质量
+  let dataQuality: "excellent" | "good" | "fair" | "poor" = "poor";
+
+  if (
+    validation.isValid &&
+    validation.warningCount === 0 &&
+    coverage.coveragePercentage >= 50
+  ) {
+    dataQuality = "excellent";
+  } else if (
+    validation.isValid &&
+    validation.warningCount <= 2 &&
+    coverage.coveragePercentage >= 30
+  ) {
+    dataQuality = "good";
+  } else if (validation.errorCount === 0 && coverage.coveragePercentage >= 10) {
+    dataQuality = "fair";
+  }
+
+  // 生成建议
+  const recommendations: string[] = [
+    ...updateSuggestions.suggestions.slice(0, 3), // 最多显示3个主要建议
+  ];
+
+  return {
+    version: CURRENT_DATABASE_VERSION,
+    dataQuality,
+    coverage,
+    validation,
+    recommendations,
+  };
+};
+
+/**
+ * 测试版本管理系统功能
+ * @returns 测试结果摘要
+ */
+export const testVersionManagementSystem = (): {
+  tests: string[];
+  passed: number;
+  failed: number;
+  summary: string;
+} => {
+  const tests: string[] = [];
+  let passed = 0;
+  let failed = 0;
+
+  // 测试1: 版本检查
+  try {
+    const currentVersion = checkDatabaseVersion();
+    if (currentVersion.version === "v1.2.0") {
+      tests.push("✅ 版本检查通过");
+      passed++;
+    } else {
+      tests.push(`❌ 版本检查失败: 期望v1.2.0，实际${currentVersion.version}`);
+      failed++;
+    }
+  } catch (error) {
+    tests.push(`❌ 版本检查异常: ${error}`);
+    failed++;
+  }
+
+  // 测试2: 数据验证
+  try {
+    const validation = validateDatabaseIntegrity();
+    if (validation.isValid) {
+      tests.push("✅ 数据完整性验证通过");
+      passed++;
+    } else {
+      tests.push(`❌ 数据完整性验证失败: ${validation.errors.length}个错误`);
+      failed++;
+    }
+  } catch (error) {
+    tests.push(`❌ 数据验证异常: ${error}`);
+    failed++;
+  }
+
+  // 测试3: 覆盖率报告
+  try {
+    const coverage = generateDataCoverageReport();
+    if (coverage.totalHexagrams === 64) {
+      tests.push("✅ 覆盖率报告生成成功");
+      passed++;
+    } else {
+      tests.push(
+        `❌ 覆盖率报告异常: 期望64个卦象，实际${coverage.totalHexagrams}个`,
+      );
+      failed++;
+    }
+  } catch (error) {
+    tests.push(`❌ 覆盖率报告异常: ${error}`);
+    failed++;
+  }
+
+  // 测试4: 版本历史
+  try {
+    const history = getVersionHistory();
+    if (history.length > 0 && history[0].version === "v1.2.0") {
+      tests.push("✅ 版本历史查询正常");
+      passed++;
+    } else {
+      tests.push("❌ 版本历史查询异常");
+      failed++;
+    }
+  } catch (error) {
+    tests.push(`❌ 版本历史异常: ${error}`);
+    failed++;
+  }
+
+  // 测试5: 更新建议
+  try {
+    const suggestions = checkUpdateSuggestions();
+    if (suggestions.suggestions.length > 0) {
+      tests.push("✅ 更新建议生成成功");
+      passed++;
+    } else {
+      tests.push("❌ 更新建议生成失败");
+      failed++;
+    }
+  } catch (error) {
+    tests.push(`❌ 更新建议异常: ${error}`);
+    failed++;
+  }
+
+  // 测试6: 系统概览
+  try {
+    const overview = getSystemOverview();
+    if (overview.version === "v1.2.0" && overview.coverage) {
+      tests.push("✅ 系统概览生成成功");
+      passed++;
+    } else {
+      tests.push("❌ 系统概览生成失败");
+      failed++;
+    }
+  } catch (error) {
+    tests.push(`❌ 系统概览异常: ${error}`);
+    failed++;
+  }
+
+  const summary =
+    failed === 0
+      ? "所有测试通过！版本管理系统运行正常。"
+      : `测试完成：${passed}个通过，${failed}个失败。请检查相关问题。`;
+
+  return {
+    tests,
+    passed,
+    failed,
+    summary,
+  };
 };
