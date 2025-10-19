@@ -398,7 +398,30 @@
   }
 }
 
-/* 中国铜钱样式 - 已移除冲突样式，使用LiuYaoAnimation.tsx中的内联样式 */
+/* 中国铜钱样式 */
+.coin {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.coin-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flipper {
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
 /* 响应式调整 */
 @media (max-width: 768px) {

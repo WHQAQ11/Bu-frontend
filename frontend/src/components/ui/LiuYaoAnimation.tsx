@@ -207,6 +207,8 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
         className="coin"
         style={{
           position: 'absolute',
+          width: '80px',
+          height: '80px',
           transform: `translate(${coin.x}px, ${coin.y}px)`,
           '--duration': `${animationDuration}s`,
           '--rx-end': `${finalRotationX}deg`,
@@ -221,6 +223,7 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
             transformStyle: "preserve-3d",
             width: '100%',
             height: '100%',
+            position: 'relative',
           }}
         >
           {/* 铜钱正面 */}
