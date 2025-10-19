@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import {
   HexagramInfo,
   getPrimaryInterpretation,
-  InterpretationResult
+  InterpretationResult,
 } from "../utils/iChingUtils";
 import Layout from "@/components/Layout";
 
@@ -106,15 +106,21 @@ const ResultPage: React.FC = () => {
     );
   }
 
-  const { benGuaInfo, bianGuaInfo, changingLineIndexes, question, category, originalHexagram } =
-    resultData;
+  const {
+    benGuaInfo,
+    bianGuaInfo,
+    changingLineIndexes,
+    question,
+    category,
+    originalHexagram,
+  } = resultData;
 
   // 计算本次占卜的核心解读
   const coreInterpretation: InterpretationResult = getPrimaryInterpretation(
     benGuaInfo,
     bianGuaInfo,
     changingLineIndexes,
-    originalHexagram
+    originalHexagram,
   );
 
   return (
@@ -215,13 +221,19 @@ const ResultPage: React.FC = () => {
 
                 <div className="text-midnight-100 leading-relaxed">
                   <p className="text-lg">
-                    根据"{coreInterpretation.text}"这句核心指引，
-                    针对您关于<span className="text-amber-300 font-medium">{question}</span>的问题：
+                    根据"{coreInterpretation.text}"这句核心指引， 针对您关于
+                    <span className="text-amber-300 font-medium">
+                      {question}
+                    </span>
+                    的问题：
                   </p>
                   <div className="mt-4 p-4 bg-midnight-700/30 rounded-lg border-l-4 border-mystical-purple">
                     <p className="text-midnight-200">
                       这个占卜结果提示您要密切关注事物发展的关键节点。
-                      {coreInterpretation.sourceGua === 'ben' ? '当前的状况' : '未来的发展'}需要您以智慧和耐心来应对。
+                      {coreInterpretation.sourceGua === "ben"
+                        ? "当前的状况"
+                        : "未来的发展"}
+                      需要您以智慧和耐心来应对。
                       建议您深入思考这句指引的含义，结合实际情况做出决策。
                     </p>
                   </div>
@@ -243,12 +255,16 @@ const ResultPage: React.FC = () => {
                   <h4 className="text-lg font-bold text-amber-400 mb-2">
                     {benGuaInfo.name}
                   </h4>
-                  <span className="text-sm text-midnight-400">本卦 (基础状况)</span>
+                  <span className="text-sm text-midnight-400">
+                    本卦 (基础状况)
+                  </span>
                 </div>
 
                 {/* 本卦卦辞 */}
                 <div className="bg-midnight-700/30 rounded-lg p-4 mb-4">
-                  <h5 className="text-sm font-medium text-amber-300 mb-2">卦辞</h5>
+                  <h5 className="text-sm font-medium text-amber-300 mb-2">
+                    卦辞
+                  </h5>
                   <p className="text-midnight-200 text-sm leading-relaxed">
                     {benGuaInfo.guaCi}
                   </p>
@@ -283,7 +299,7 @@ const ResultPage: React.FC = () => {
 
                 {changingLineIndexes.length > 0 && (
                   <p className="text-xs text-midnight-400 mt-3 text-center">
-                    动爻：第{changingLineIndexes.map(i => i + 1).join('、')}爻
+                    动爻：第{changingLineIndexes.map((i) => i + 1).join("、")}爻
                   </p>
                 )}
               </div>
@@ -295,12 +311,16 @@ const ResultPage: React.FC = () => {
                     <h4 className="text-lg font-bold text-red-400 mb-2">
                       {bianGuaInfo.name}
                     </h4>
-                    <span className="text-sm text-midnight-400">变卦 (发展趋势)</span>
+                    <span className="text-sm text-midnight-400">
+                      变卦 (发展趋势)
+                    </span>
                   </div>
 
                   {/* 变卦卦辞 */}
                   <div className="bg-midnight-700/30 rounded-lg p-4 mb-4">
-                    <h5 className="text-sm font-medium text-red-300 mb-2">卦辞</h5>
+                    <h5 className="text-sm font-medium text-red-300 mb-2">
+                      卦辞
+                    </h5>
                     <p className="text-midnight-200 text-sm leading-relaxed">
                       {bianGuaInfo.guaCi}
                     </p>

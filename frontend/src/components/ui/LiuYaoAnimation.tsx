@@ -60,13 +60,13 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   // 变卦数据状态
   const [bianGuaLines, setBianGuaLines] = useState<YaoInfo[]>([]);
 
-  // 生成随机铜钱结果
+  // 生成随机铜钱结果 - 简化版
   const generateCoinResult = useCallback((): CoinResult[] => {
-    return Array.from({ length: 3 }, (_, i) => ({
+    return Array.from({ length: 3 }, () => ({
       isHeads: Math.random() < 0.5,
-      rotation: Math.random() * 1440, // 增加旋转圈数以配合3D动画
-      x: (i - 1) * 120 + (Math.random() - 0.5) * 40, // 添加随机偏移
-      y: Math.random() * 20 - 10, // 添加随机垂直偏移
+      rotation: 0, // 简化旋转参数
+      x: 0, // 简化位置参数
+      y: 0, // 简化位置参数
     }));
   }, []);
 
@@ -193,341 +193,187 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
     }
   }, [stage, yaoResults, navigate, question, category, bianGuaLines]);
 
-  // 渲染铜钱组件
-  const renderCoin = (coin: CoinResult, index: number) => {
-    // 为每个铜钱创建独特的动画延迟
+  // 渲染铜钱组件 - 简化版本
+  const renderCoin = (_coin: CoinResult, index: number) => {
     const animationDelay = index * 0.2;
-    // 随机化动画持续时间，增加真实感
-    const animationDuration = 2.5 + Math.random() * 0.5;
 
     return (
       <div
         key={index}
-        className="absolute transition-all duration-1000 preserve-3d gpu-accelerated"
+        className="absolute"
         style={{
-          transform: `translate(${coin.x}px, ${coin.y}px) rotateZ(${coin.rotation}deg)`,
           animation: isAnimating
-            ? `coin-flip-3d ${animationDuration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${animationDelay}s, coin-toss-arc ${animationDuration}s ease-in-out ${animationDelay}s, coin-bounce 0.8s ease-out ${animationDuration + 0.2}s`
+            ? `coin-glow 2.5s ease-in-out ${animationDelay}s`
             : "none",
-          transformStyle: "preserve-3d",
-          backfaceVisibility: "hidden",
-          perspective: 1000,
         }}
       >
-        <div className="relative w-20 h-20 chinese-coin-container-3d" style={{ transformStyle: "preserve-3d" }}>
-          {/* 铜钱厚度侧面 - 增强立体感 */}
-          <div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background: coin.isHeads
-                ? "linear-gradient(135deg, #b45309 0%, #92400e 50%, #78350f 100%)"
-                : "linear-gradient(135deg, #92400e 0%, #78350f 50%, #451a03 100%)",
-              transform: "translateZ(-2px)",
-              boxShadow: "0 0 10px rgba(0,0,0,0.3)"
-            }}
-          ></div>
-
-          {/* 铜钱主体 - 3D金属质感 */}
-          <div
-            className={`w-full h-full rounded-full flex items-center justify-center transition-all duration-500 relative overflow-hidden ${
-              coin.isHeads
-                ? "bg-gradient-to-br from-amber-500 via-amber-600 to-amber-800"
-                : "bg-gradient-to-br from-amber-600 via-amber-700 to-amber-900"
-            }`}
-            style={{
-              boxShadow: `
-                   inset 0 3px 6px rgba(0,0,0,0.4),
-                   inset 0 -3px 6px rgba(255,255,255,0.15),
-                   0 12px 24px rgba(0,0,0,0.5),
-                   0 6px 12px rgba(0,0,0,0.3),
-                   0 0 0 1px rgba(139,69,19,0.4),
-                   0 0 0 3px rgba(160,82,45,0.3),
-                   0 0 20px rgba(217,119,6,0.2)
-                 `,
-              background: coin.isHeads
-                ? `
-                     radial-gradient(circle at 25% 25%, rgba(255,255,255,0.4) 0%, transparent 45%),
-                     radial-gradient(circle at 75% 75%, rgba(0,0,0,0.25) 0%, transparent 45%),
-                     radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 70%),
-                     linear-gradient(135deg, #d97706 0%, #b45309 20%, #92400e 40%, #78350f 60%, #451a03 100%)
-                     `
-                : `
-                     radial-gradient(circle at 35% 35%, rgba(255,255,255,0.3) 0%, transparent 40%),
-                     radial-gradient(circle at 65% 65%, rgba(0,0,0,0.35) 0%, transparent 40%),
-                     radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12) 0%, transparent 60%),
-                     linear-gradient(135deg, #b45309 0%, #92400e 25%, #78350f 45%, #451a03 100%)
-                     `,
-            }}
-          >
-            {/* 铜锈和做旧效果 */}
+        <div
+          className="relative w-20 h-20"
+          style={{
+            animation: isAnimating
+              ? `coin-flip-3d 2.5s linear ${animationDelay}s forwards`
+              : "none",
+            transformStyle: "preserve-3d",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          <div className="coin-container">
+            {/* 铜钱正面 */}
             <div
-              className="absolute inset-0 rounded-full opacity-30"
+              className="coin-face coin-front"
               style={{
-                background: `
-                     radial-gradient(circle at 15% 15%, transparent 30%, rgba(139,69,19,0.1) 60%),
-                     radial-gradient(circle at 85% 85%, transparent 30%, rgba(160,82,45,0.1) 60%),
-                     radial-gradient(circle at 50% 10%, rgba(184,134,11,0.05) 0%, transparent 40%),
-                     radial-gradient(circle at 20% 80%, rgba(139,69,19,0.08) 0%, transparent 50%)
-                   `,
-              }}
-            ></div>
-
-            {/* 方孔 - 真实镂空3D效果 */}
-            <div
-              className="absolute w-6 h-6"
-              style={{
-                background: "transparent",
-                boxShadow: `
-                     inset 0 0 0 2px rgba(0,0,0,0.9),
-                     inset 0 0 0 4px rgba(0,0,0,0.7),
-                     0 0 0 1px rgba(139,69,19,0.8),
-                     0 0 0 2px rgba(160,82,45,0.6),
-                     0 2px 4px rgba(0,0,0,0.5),
-                     0 4px 8px rgba(0,0,0,0.3)
-                   `,
-                transform: "translateZ(1px)",
-                border: "2px solid rgba(139,69,19,0.6)",
-                borderRadius: "2px"
-              }}
-            ></div>
-
-            {/* 方孔内壁深度效果 */}
-            <div
-              className="absolute w-4 h-4"
-              style={{
-                top: "8px",
-                left: "8px",
-                background: "rgba(15,23,42,0.95)",
-                transform: "translateZ(1px)",
-                boxShadow: "inset 0 0 8px rgba(0,0,0,0.8)"
-              }}
-            ></div>
-
-            {/* 正面文字 - 招財進寶四字环绕布局 */}
-            {coin.isHeads && (
-              <div className="absolute inset-0">
-                {/* 上方 - 進 */}
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-                  <div
-                    className="text-amber-100 font-bold text-sm leading-none select-none"
-                    style={{
-                      fontFamily: "'KaiTi', 'STKaiti', serif",
-                      textShadow: `
-                           0 1px 2px rgba(0,0,0,0.8),
-                           0 0 4px rgba(217,119,6,0.3),
-                           inset 0 1px 1px rgba(255,255,255,0.2)
-                         `,
-                      filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.6))",
-                    }}
-                  >
-                    進
-                  </div>
-                </div>
-
-                {/* 下方 - 寶 */}
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
-                  <div
-                    className="text-amber-100 font-bold text-sm leading-none select-none"
-                    style={{
-                      fontFamily: "'KaiTi', 'STKaiti', serif",
-                      textShadow: `
-                           0 1px 2px rgba(0,0,0,0.8),
-                           0 0 4px rgba(217,119,6,0.3),
-                           inset 0 1px 1px rgba(255,255,255,0.2)
-                         `,
-                      filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.6))",
-                    }}
-                  >
-                    寶
-                  </div>
-                </div>
-
-                {/* 左方 - 招 */}
-                <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
-                  <div
-                    className="text-amber-100 font-bold text-sm leading-none select-none"
-                    style={{
-                      fontFamily: "'KaiTi', 'STKaiti', serif",
-                      textShadow: `
-                           0 1px 2px rgba(0,0,0,0.8),
-                           0 0 4px rgba(217,119,6,0.3),
-                           inset 0 1px 1px rgba(255,255,255,0.2)
-                         `,
-                      filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.6))",
-                    }}
-                  >
-                    招
-                  </div>
-                </div>
-
-                {/* 右方 - 財 */}
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                  <div
-                    className="text-amber-100 font-bold text-sm leading-none select-none"
-                    style={{
-                      fontFamily: "'KaiTi', 'STKaiti', serif",
-                      textShadow: `
-                           0 1px 2px rgba(0,0,0,0.8),
-                           0 0 4px rgba(217,119,6,0.3),
-                           inset 0 1px 1px rgba(255,255,255,0.2)
-                         `,
-                      filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.6))",
-                    }}
-                  >
-                    財
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* 背面纹饰 - 传统八卦图案 */}
-            {!coin.isHeads && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-16 h-16">
-                  {/* 太极图主体 */}
-                  <div className="absolute inset-0 rounded-full overflow-hidden">
-                    {/* 阴阳两半 */}
-                    <div className="absolute inset-0 flex">
-                      {/* 左半圆 - 阴（黑色） */}
-                      <div
-                        className="w-1/2 h-full bg-amber-900/80"
-                        style={{
-                          clipPath: "ellipse(100% 50% at 0% 50%)",
-                          background: "linear-gradient(90deg, #451a03 0%, #92400e 100%)"
-                        }}
-                      ></div>
-                      {/* 右半圆 - 阳（金色） */}
-                      <div
-                        className="w-1/2 h-full bg-amber-400/80"
-                        style={{
-                          clipPath: "ellipse(100% 50% at 100% 50%)",
-                          background: "linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%)"
-                        }}
-                      ></div>
-                    </div>
-
-                    {/* 阴中阳点 */}
-                    <div
-                      className="absolute w-3 h-3 bg-amber-400/90 rounded-full"
-                      style={{
-                        top: "25%",
-                        left: "25%",
-                        background: "radial-gradient(circle, #fbbf24 0%, #f59e0b 100%)",
-                        boxShadow: "0 0 4px rgba(251, 191, 36, 0.5)"
-                      }}
-                    ></div>
-
-                    {/* 阳中阴点 */}
-                    <div
-                      className="absolute w-3 h-3 bg-amber-900/90 rounded-full"
-                      style={{
-                        top: "25%",
-                        right: "25%",
-                        background: "radial-gradient(circle, #92400e 0%, #451a03 100%)",
-                        boxShadow: "0 0 4px rgba(146, 64, 14, 0.5)"
-                      }}
-                    ></div>
-                  </div>
-
-                  {/* 八卦符号环绕 */}
-                  {/* 乾卦（上） */}
-                  <div
-                    className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-2 bg-amber-600/70"
-                    style={{ marginTop: "-4px" }}
-                  ></div>
-                  <div
-                    className="absolute top-0 left-1/2 transform -translate-x-1/2 w-2 h-1 bg-amber-600/70"
-                    style={{ marginTop: "-7px" }}
-                  ></div>
-
-                  {/* 坤卦（下） */}
-                  <div
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-2 bg-amber-600/70"
-                    style={{ marginBottom: "-4px" }}
-                  ></div>
-                  <div
-                    className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-1 bg-amber-600/70"
-                    style={{ marginBottom: "-7px" }}
-                  ></div>
-
-                  {/* 离卦（左） */}
-                  <div
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 w-2 h-1 bg-amber-600/70"
-                    style={{ marginLeft: "-4px" }}
-                  ></div>
-                  <div
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-2 bg-amber-600/70"
-                    style={{ marginLeft: "-7px" }}
-                  ></div>
-
-                  {/* 坎卦（右） */}
-                  <div
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-1 bg-amber-600/70"
-                    style={{ marginRight: "-4px" }}
-                  ></div>
-                  <div
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1 h-2 bg-amber-600/70"
-                    style={{ marginRight: "-7px" }}
-                  ></div>
-
-                  {/* 四角装饰纹 */}
-                  <div
-                    className="absolute top-1 left-1 w-1 h-1 rounded-full bg-amber-500/60"
-                  ></div>
-                  <div
-                    className="absolute top-1 right-1 w-1 h-1 rounded-full bg-amber-500/60"
-                  ></div>
-                  <div
-                    className="absolute bottom-1 left-1 w-1 h-1 rounded-full bg-amber-500/60"
-                  ></div>
-                  <div
-                    className="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-amber-500/60"
-                  ></div>
-                </div>
-              </div>
-            )}
-
-            {/* 金属光泽和镜面反射 */}
-            <div
-              className="absolute inset-0 rounded-full pointer-events-none"
-              style={{
-                background: `
-                     radial-gradient(circle at 25% 25%, rgba(255,255,255,0.4) 0%, transparent 20%),
-                     radial-gradient(circle at 75% 75%, rgba(255,255,255,0.2) 0%, transparent 15%),
-                     linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%),
-                     linear-gradient(-45deg, transparent 45%, rgba(255,255,255,0.05) 55%, transparent 65%)
-                   `,
-                mixBlendMode: "overlay",
-              }}
-            ></div>
-
-            {/* 边缘高光和立体边缘 */}
-            <div
-              className="absolute inset-0 rounded-full pointer-events-none"
-              style={{
-                border: "2px solid transparent",
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                backfaceVisibility: "hidden",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%, rgba(0,0,0,0.2) 100%) border-box",
-                WebkitMask:
-                  "linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)",
-                WebkitMaskComposite: "xor",
-                maskComposite: "exclude",
+                  "radial-gradient(circle at center, #d4af37 0%, #b8860b 40%, #8b4513 100%)",
+                boxShadow:
+                  "inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.5)",
+                border: "3px solid #8B6914",
+                transform: "rotateY(0deg)",
               }}
-            ></div>
+            >
+              {/* 方孔 */}
+              <div
+                style={{
+                  position: "absolute",
+                  width: "30%",
+                  height: "30%",
+                  background: "#1a1a2e",
+                  border: "2px solid #5a3d0c",
+                  boxShadow: "0 0 5px rgba(0,0,0,0.7) inset",
+                  zIndex: 2,
+                }}
+              />
+              {/* 招财进宝文字 */}
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "15px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  進
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "15px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  寶
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  招
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  財
+                </div>
+              </div>
+            </div>
+
+            {/* 铜钱背面 */}
+            <div
+              className="coin-face coin-back"
+              style={{
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                backfaceVisibility: "hidden",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background:
+                  "radial-gradient(circle at center, #d4af37 0%, #b8860b 40%, #8b4513 100%)",
+                boxShadow:
+                  "inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.5)",
+                border: "3px solid #8B6914",
+                transform: "rotateX(180deg)",
+              }}
+            >
+              {/* 方孔 */}
+              <div
+                style={{
+                  position: "absolute",
+                  width: "30%",
+                  height: "30%",
+                  background: "#1a1a2e",
+                  border: "2px solid #5a3d0c",
+                  boxShadow: "0 0 5px rgba(0,0,0,0.7) inset",
+                  zIndex: 2,
+                }}
+              />
+              {/* 背面纹饰 - 简化版 */}
+              <div
+                style={{
+                  position: "relative",
+                  zIndex: 1,
+                  width: "80%",
+                  height: "80%",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "60%",
+                      height: "60%",
+                      border: "2px solid #6a4a0a",
+                      borderRadius: "4px",
+                      transform: "rotate(45deg)",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-
-          {/* 动态光晕效果 */}
-          {isAnimating && (
-            <div
-              className="absolute inset-0 rounded-full pointer-events-none animate-pulse"
-              style={{
-                background:
-                  "radial-gradient(circle, rgba(217,119,6,0.2) 0%, transparent 70%)",
-                filter: "blur(8px)",
-                transform: "scale(1.2)",
-              }}
-            ></div>
-          )}
         </div>
       </div>
     );
