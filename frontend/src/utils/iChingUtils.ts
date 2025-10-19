@@ -1042,11 +1042,11 @@ export const searchHexagrams = (keyword: string): HexagramInfo[] => {
 
 // 解读结果接口
 export interface InterpretationResult {
-  title: string;           // 如"本卦·乾·初九爻辞"
-  text: string;           // 爻辞原文
-  sourceGua: 'ben' | 'bian'; // 来源是本卦还是变卦
-  yaoPosition?: string;   // 爻位："初九"、"六二"等
-  importance: 'primary' | 'secondary'; // 重要性级别
+  title: string; // 如"本卦·乾·初九爻辞"
+  text: string; // 爻辞原文
+  sourceGua: "ben" | "bian"; // 来源是本卦还是变卦
+  yaoPosition?: string; // 爻位："初九"、"六二"等
+  importance: "primary" | "secondary"; // 重要性级别
 }
 
 /**
@@ -1056,8 +1056,8 @@ export interface InterpretationResult {
  * @returns 爻位名称，如"初九"、"六二"等
  */
 export const getYaoPositionName = (index: number, value: number): string => {
-  const positionNames = ['初', '二', '三', '四', '五', '上'];
-  const yaoType = [7, 9].includes(value) ? '九' : '六';
+  const positionNames = ["初", "二", "三", "四", "五", "上"];
+  const yaoType = [7, 9].includes(value) ? "九" : "六";
   return positionNames[index] + yaoType;
 };
 
@@ -1074,7 +1074,7 @@ export const getPrimaryInterpretation = (
   benGuaInfo: HexagramInfo,
   bianGuaInfo?: HexagramInfo,
   changingLineIndexes: number[] = [],
-  originalHexagram?: number[]
+  originalHexagram?: number[],
 ): InterpretationResult => {
   const changingCount = changingLineIndexes.length;
 
@@ -1084,8 +1084,8 @@ export const getPrimaryInterpretation = (
       return {
         title: `本卦 · ${benGuaInfo.name}`,
         text: benGuaInfo.guaCi,
-        sourceGua: 'ben',
-        importance: 'primary',
+        sourceGua: "ben",
+        importance: "primary",
       };
     }
 
@@ -1104,9 +1104,9 @@ export const getPrimaryInterpretation = (
       return {
         title: `本卦 · ${benGuaInfo.name} · ${yaoPosition}爻辞`,
         text: lineValue,
-        sourceGua: 'ben',
+        sourceGua: "ben",
         yaoPosition,
-        importance: 'primary',
+        importance: "primary",
       };
     }
 
@@ -1125,9 +1125,9 @@ export const getPrimaryInterpretation = (
       return {
         title: `本卦 · ${benGuaInfo.name} · ${yaoPosition}爻辞`,
         text: lineValue,
-        sourceGua: 'ben',
+        sourceGua: "ben",
         yaoPosition,
-        importance: 'primary',
+        importance: "primary",
       };
     }
 
@@ -1136,8 +1136,8 @@ export const getPrimaryInterpretation = (
       return {
         title: `本卦 · ${benGuaInfo.name}`,
         text: benGuaInfo.guaCi,
-        sourceGua: 'ben',
-        importance: 'primary',
+        sourceGua: "ben",
+        importance: "primary",
       };
     }
 
@@ -1147,16 +1147,16 @@ export const getPrimaryInterpretation = (
         return {
           title: `变卦 · ${bianGuaInfo.name}`,
           text: bianGuaInfo.guaCi,
-          sourceGua: 'bian',
-          importance: 'primary',
+          sourceGua: "bian",
+          importance: "primary",
         };
       }
       // 如果没有变卦信息，回退到本卦卦辞
       return {
         title: `本卦 · ${benGuaInfo.name}`,
         text: benGuaInfo.guaCi,
-        sourceGua: 'ben',
-        importance: 'primary',
+        sourceGua: "ben",
+        importance: "primary",
       };
     }
 
@@ -1164,7 +1164,9 @@ export const getPrimaryInterpretation = (
       // 五爻动，取变卦中不变的爻辞
       if (bianGuaInfo) {
         // 找出变卦中哪个爻位是不变的（即原卦中不是动爻的）
-        const staticLines = [0, 1, 2, 3, 4, 5].filter(i => !changingLineIndexes.includes(i));
+        const staticLines = [0, 1, 2, 3, 4, 5].filter(
+          (i) => !changingLineIndexes.includes(i),
+        );
         if (staticLines.length > 0) {
           const staticLineIndex = staticLines[0];
           const lineValue = bianGuaInfo.yaoCi[staticLineIndex];
@@ -1179,9 +1181,9 @@ export const getPrimaryInterpretation = (
           return {
             title: `变卦 · ${bianGuaInfo.name} · ${yaoPosition}爻辞`,
             text: lineValue,
-            sourceGua: 'bian',
+            sourceGua: "bian",
             yaoPosition,
-            importance: 'primary',
+            importance: "primary",
           };
         }
       }
@@ -1189,8 +1191,8 @@ export const getPrimaryInterpretation = (
       return {
         title: `本卦 · ${benGuaInfo.name}`,
         text: benGuaInfo.guaCi,
-        sourceGua: 'ben',
-        importance: 'primary',
+        sourceGua: "ben",
+        importance: "primary",
       };
     }
 
@@ -1200,16 +1202,16 @@ export const getPrimaryInterpretation = (
         return {
           title: `变卦 · ${bianGuaInfo.name}`,
           text: bianGuaInfo.guaCi,
-          sourceGua: 'bian',
-          importance: 'primary',
+          sourceGua: "bian",
+          importance: "primary",
         };
       }
       // 回退到本卦卦辞
       return {
         title: `本卦 · ${benGuaInfo.name}`,
         text: benGuaInfo.guaCi,
-        sourceGua: 'ben',
-        importance: 'primary',
+        sourceGua: "ben",
+        importance: "primary",
       };
     }
 
@@ -1218,8 +1220,8 @@ export const getPrimaryInterpretation = (
       return {
         title: `本卦 · ${benGuaInfo.name}`,
         text: benGuaInfo.guaCi,
-        sourceGua: 'ben',
-        importance: 'primary',
+        sourceGua: "ben",
+        importance: "primary",
       };
     }
   }
