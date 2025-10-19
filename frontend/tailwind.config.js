@@ -79,9 +79,9 @@ export default {
         'float': 'float 3s ease-in-out infinite',
         'rotate-slow': 'rotate 8s linear infinite',
         'shimmer': 'shimmer 2s linear infinite',
-        'coin-flip-3d': 'coinFlip3D 2.5s linear',
-        'coin-toss-arc': 'coinTossArc 2.5s ease-in-out',
-        'coin-glow': 'coinGlow 2.5s ease-in-out',
+        'coin-flip-3d': 'coinFlip3D var(--duration) linear',
+        'coin-toss-arc': 'coinTossArc var(--duration) ease-in-out',
+        'coin-glow': 'coinGlow var(--duration) ease-in-out',
         'glow-pulse': 'glowPulse 2s ease-in-out infinite',
       },
       keyframes: {
@@ -115,14 +115,14 @@ export default {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
-        // 简化版铜钱翻转动画 - 主要使用X轴旋转
+        // 铜钱翻转动画 - 支持CSS变量
         coinFlip3D: {
           '0%': {
             transform: 'rotateX(0deg) rotateY(0deg)',
             opacity: '1'
           },
           '100%': {
-            transform: 'rotateX(1800deg) rotateY(0deg)',
+            transform: 'rotateX(var(--rx-end)) rotateY(0deg)',
             opacity: '1'
           }
         },
