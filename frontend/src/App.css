@@ -423,6 +423,25 @@
   height: 100%;
 }
 
+/* 铜钱翻转动画 - 简化版本 */
+@keyframes coinFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  25% {
+    transform: rotateY(720deg) scale(1.1);
+  }
+  50% {
+    transform: rotateY(1440deg) scale(1.2);
+  }
+  75% {
+    transform: rotateY(2160deg) scale(1.1);
+  }
+  100% {
+    transform: rotateY(2880deg) scale(1);
+  }
+}
+
 /* 响应式调整 */
 @media (max-width: 768px) {
   .animate-coinFlip {

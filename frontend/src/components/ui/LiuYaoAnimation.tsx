@@ -197,9 +197,7 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   const renderCoin = (coin: CoinResult, index: number) => {
     const animationDelay = index * 0.2;
     const animationDuration = 2.5 + Math.random() * 0.5;
-    const rotations = 5 + Math.floor(Math.random() * 4);
     const finalSide = coin.isHeads;
-    const finalRotationX = finalSide ? (rotations * 360) : (rotations * 360 + 180);
 
     return (
       <div
@@ -210,15 +208,13 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
           width: '80px',
           height: '80px',
           transform: `translate(${coin.x}px, ${coin.y}px)`,
-          '--duration': `${animationDuration}s`,
-          '--rx-end': `${finalRotationX}deg`,
-        } as React.CSSProperties}
+        }}
       >
         <div
           className="flipper"
           style={{
             animation: isAnimating
-              ? `coin-flip-3d var(--duration) linear ${animationDelay}s forwards`
+              ? `coinFlip ${animationDuration}s ease-in-out ${animationDelay}s forwards`
               : "none",
             transformStyle: "preserve-3d",
             width: '100%',
@@ -226,9 +222,9 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
             position: 'relative',
           }}
         >
-          {/* 铜钱正面 */}
+          {/* 铜钱正面 - 根据isHeads决定显示哪一面 */}
           <div
-            className="coin-face coin-front"
+            className={`coin-face ${coin.isHeads ? 'coin-front' : 'coin-back'}`}
             style={{
               position: "absolute",
               width: "100%",
@@ -255,83 +251,110 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
                 zIndex: 2,
               }}
             />
-            {/* 招财进宝文字 */}
-            <div style={{ position: "relative", zIndex: 1 }}>
+            {/* 招财进宝文字 - 只在正面显示 */}
+            {coin.isHeads && (
+              <div style={{ position: "relative", zIndex: 1 }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "15px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  進
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "15px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  寶
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  招
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "15px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    color: "#6a4a0a",
+                    fontFamily: "'KaiTi', 'STKaiti', serif",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  財
+                </div>
+              </div>
+            )}
+            {/* 背面纹饰 - 只在背面显示 */}
+            {!coin.isHeads && (
               <div
                 style={{
-                  position: "absolute",
-                  top: "15px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  color: "#6a4a0a",
-                  fontFamily: "'KaiTi', 'STKaiti', serif",
-                  fontSize: "14px",
-                  fontWeight: "bold",
+                  position: "relative",
+                  zIndex: 1,
+                  width: "80%",
+                  height: "80%",
                 }}
               >
-                進
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "60%",
+                      height: "60%",
+                      border: "2px solid #6a4a0a",
+                      borderRadius: "4px",
+                      transform: "rotate(45deg)",
+                    }}
+                  />
+                </div>
               </div>
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "15px",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  color: "#6a4a0a",
-                  fontFamily: "'KaiTi', 'STKaiti', serif",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                寶
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  left: "15px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#6a4a0a",
-                  fontFamily: "'KaiTi', 'STKaiti', serif",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                招
-              </div>
-              <div
-                style={{
-                  position: "absolute",
-                  right: "15px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  color: "#6a4a0a",
-                  fontFamily: "'KaiTi', 'STKaiti', serif",
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                }}
-              >
-                財
-              </div>
-            </div>
+            )}
           </div>
 
-          {/* 铜钱背面 */}
+          {/* 铜钱背面 - 隐藏 */}
           <div
-            className="coin-face coin-back"
+            className="coin-face"
             style={{
               position: "absolute",
               width: "100%",
               height: "100%",
               backfaceVisibility: "hidden",
               borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "radial-gradient(circle at center, #d4af37 0%, #b8860b 40%, #8b4513 100%)",
-              boxShadow: "inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.5)",
-              border: "3px solid #8B6914",
-              transform: "rotateX(180deg)",
+              display: "none", // 隐藏，因为我们现在用单一面
             }}
           >
             {/* 方孔 */}
