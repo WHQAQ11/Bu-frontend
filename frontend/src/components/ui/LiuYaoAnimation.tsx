@@ -197,7 +197,6 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
   const renderCoin = (coin: CoinResult, index: number) => {
     const animationDelay = index * 0.2;
     const animationDuration = 2.5 + Math.random() * 0.5;
-    const finalSide = coin.isHeads;
 
     return (
       <div
