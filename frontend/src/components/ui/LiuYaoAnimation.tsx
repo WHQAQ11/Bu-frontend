@@ -203,9 +203,9 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
         key={index}
         className="coin"
         style={{
-          position: 'absolute',
-          width: '80px',
-          height: '80px',
+          position: "absolute",
+          width: "80px",
+          height: "80px",
           transform: `translate(${coin.x}px, ${coin.y}px)`,
         }}
       >
@@ -216,14 +216,14 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
               ? `coinFlip ${animationDuration}s ease-in-out ${animationDelay}s forwards`
               : "none",
             transformStyle: "preserve-3d",
-            width: '100%',
-            height: '100%',
-            position: 'relative',
+            width: "100%",
+            height: "100%",
+            position: "relative",
           }}
         >
           {/* 铜钱正面 - 根据isHeads决定显示哪一面 */}
           <div
-            className={`coin-face ${coin.isHeads ? 'coin-front' : 'coin-back'}`}
+            className={`coin-face ${coin.isHeads ? "coin-front" : "coin-back"}`}
             style={{
               position: "absolute",
               width: "100%",
@@ -233,8 +233,10 @@ export const LiuYaoAnimation: React.FC<AnimationComponentProps> = ({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              background: "radial-gradient(circle at center, #d4af37 0%, #b8860b 40%, #8b4513 100%)",
-              boxShadow: "inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.5)",
+              background:
+                "radial-gradient(circle at center, #d4af37 0%, #b8860b 40%, #8b4513 100%)",
+              boxShadow:
+                "inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.5)",
               border: "3px solid #8B6914",
             }}
           >
