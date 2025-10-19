@@ -1448,10 +1448,19 @@ export const getEnhancedHexagramInfo = (
       lowerTrigram: "未知",
       symbol: "暂无象征说明"
     },
+    source: enhancedInfo?.source || {
+      book: "《周易》",
+      chapter: "未知章节",
+      position: 1
+    },
     references: enhancedInfo?.references || [],
     lastUpdated: enhancedInfo?.lastUpdated || new Date().toISOString(),
     version: enhancedInfo?.version || "v1.0.0",
-    notes: enhancedInfo?.notes
+    notes: enhancedInfo?.notes,
+    // 确保必需的字段有默认值
+    pinyin: enhancedInfo?.pinyin || basicInfo.pinyin || "未知",
+    number: enhancedInfo?.number || basicInfo.number || 0,
+    nameAlt: enhancedInfo?.nameAlt || basicInfo.name
   };
 };
 
