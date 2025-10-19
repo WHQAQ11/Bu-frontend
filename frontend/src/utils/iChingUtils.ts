@@ -3,7 +3,7 @@
  * 提供完整的64卦数据库和查询功能
  */
 
-// 卦象信息接口
+// 原始卦象信息接口（保持向后兼容）
 export interface HexagramInfo {
   key: string; // 6位二进制字符串，1为阳，0为阴，从下到上
   name: string; // 中文卦名
@@ -12,6 +12,195 @@ export interface HexagramInfo {
   pinyin?: string; // 拼音（可选，未来扩展）
   number?: number; // 卦序（可选，未来扩展）
 }
+
+// 增强爻辞接口
+export interface EnhancedYaoCi {
+  position: number;      // 爻位 (1-6)
+  original: string;      // 原始爻辞
+  translation: string;   // 现代翻译
+  interpretation: string; // 基础解释
+
+  // 分类引导（简短，1-2句话）
+  categoryGuidance: {
+    career: string;       // 事业引导
+    finance: string;      // 财运引导
+    relationship: string; // 感情引导
+    health: string;       // 健康引导
+    general: string;      // 通用引导
+  };
+
+  // 古籍参考
+  references?: {
+    source: string;       // 出处
+    text: string;         // 相关原文
+    note: string;         // 说明
+  }[];
+}
+
+// 增强卦象信息接口
+export interface EnhancedHexagramInfo {
+  // 基础信息
+  key: string;
+  name: string;
+  nameAlt?: string;      // 别名，如"乾"又称"天"
+  pinyin: string;
+  number: number;        // 卦序 (1-64)
+
+  // 出处信息
+  source: {
+    book: string;        // 出自《周易·上经》等
+    chapter: string;     // 具体章节
+    position: number;    // 在该章节的位置
+  };
+
+  // 卦辞信息
+  guaCi: {
+    original: string;    // 原始卦辞
+    translation: string; // 现代翻译
+    interpretation: string; // 基础解释
+  };
+
+  // 爻辞信息（增强版）
+  yaoCi: EnhancedYaoCi[];
+
+  // 卦象结构
+  structure: {
+    upperTrigram: string; // 上卦
+    lowerTrigram: string; // 下卦
+    symbol: string;       // 卦象象征
+  };
+
+  // 古籍参考
+  references: {
+    book: string;         // 古籍名称
+    quote: string;        // 相关原文
+    explanation: string;  // 解释说明
+  }[];
+
+  // 更新追踪
+  lastUpdated: string;
+  version: string;
+  notes?: string;        // 更新说明
+}
+
+// 解读状态管理接口
+export interface InterpretationState {
+  stage: 'loading' | 'interpreting' | 'completed' | 'error';
+  message: string;
+  progress?: number;
+  tips?: string[];
+}
+
+// 数据版本管理接口
+export interface DatabaseVersion {
+  version: string;
+  updateDate: string;
+  changes: {
+    type: 'add' | 'update' | 'delete';
+    target: string;  // 修改目标
+    description: string; // 修改说明
+  }[];
+}
+
+// 友好的加载提示信息
+export const LOADING_MESSAGES = [
+  "小卜正在为您加速解卦，稍稍等我一下噢~",
+  "正在连接古老的智慧，请稍候片刻...",
+  "卦象正在显现，马上就能为您解读了...",
+  "小卜正在潜心研究您的卦象，耐心等一下~",
+  "千年易经智慧即将呈现，请稍等片刻..."
+];
+
+// 解读小贴士
+export const INTERPRETATION_TIPS = [
+  "易经解读需要结合具体问题来理解",
+  "好的心态有助于更好地理解卦象寓意",
+  "古人说：心诚则灵，静心等待答案",
+  "每一卦都蕴含着深刻的人生哲理"
+];
+
+// 占卜类型映射
+export const DIVINATION_CATEGORIES = {
+  career: "事业",
+  finance: "财运",
+  relationship: "感情",
+  health: "健康",
+  general: "综合"
+} as const;
+
+export type DivinationCategory = keyof typeof DIVINATION_CATEGORIES;
+
+// 卦象基础信息扩展数据
+export const HEXAGRAM_ENHANCED_INFO: Record<string, Partial<EnhancedHexagramInfo>> = {
+  "111111": {
+    // 乾卦
+    nameAlt: "天",
+    pinyin: "qián",
+    source: {
+      book: "周易·上经",
+      chapter: "第一卦",
+      position: 1
+    },
+    structure: {
+      upperTrigram: "乾（天）",
+      lowerTrigram: "乾（天）",
+      symbol: "天行健，君子以自强不息"
+    },
+    lastUpdated: new Date().toISOString(),
+    version: "v1.0.0"
+  },
+  "000000": {
+    // 坤卦
+    nameAlt: "地",
+    pinyin: "kūn",
+    source: {
+      book: "周易·上经",
+      chapter: "第二卦",
+      position: 2
+    },
+    structure: {
+      upperTrigram: "坤（地）",
+      lowerTrigram: "坤（地）",
+      symbol: "地势坤，君子以厚德载物"
+    },
+    lastUpdated: new Date().toISOString(),
+    version: "v1.0.0"
+  },
+  "010111": {
+    // 需卦
+    nameAlt: "水天需",
+    pinyin: "xū",
+    source: {
+      book: "周易·上经",
+      chapter: "第五卦",
+      position: 5
+    },
+    structure: {
+      upperTrigram: "坎（水）",
+      lowerTrigram: "乾（天）",
+      symbol: "云上于天，需；君子以饮食宴乐"
+    },
+    lastUpdated: new Date().toISOString(),
+    version: "v1.0.0"
+  },
+  "011111": {
+    // 夬卦
+    nameAlt: "泽天夬",
+    pinyin: "guài",
+    source: {
+      book: "周易·下经",
+      chapter: "第四十三卦",
+      position: 43
+    },
+    structure: {
+      upperTrigram: "兑（泽）",
+      lowerTrigram: "乾（天）",
+      symbol: "泽上于天，夬；君子以施禄及下"
+    },
+    lastUpdated: new Date().toISOString(),
+    version: "v1.0.0"
+  }
+};
 
 // 64卦完整数据库
 // 键：6位二进制字符串（1=阳爻，0=阴爻），顺序为从下到上（初爻到上爻）
@@ -1225,4 +1414,146 @@ export const getPrimaryInterpretation = (
       };
     }
   }
+};
+
+// =============== 新增的增强功能函数 ===============
+
+/**
+ * 获取增强的卦象信息
+ * @param yaoLines 6条爻的数组，顺序为从下到上（初爻到上爻）
+ * @returns 合并的增强卦象信息
+ */
+export const getEnhancedHexagramInfo = (
+  yaoLines: YaoInfo[],
+): EnhancedHexagramInfo | undefined => {
+  // 获取基础卦象信息
+  const basicInfo = getHexagramInfo(yaoLines);
+  if (!basicInfo) return undefined;
+
+  // 获取增强信息
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[basicInfo.key];
+
+  // 合并信息
+  return {
+    ...basicInfo,
+    ...enhancedInfo,
+    guaCi: {
+      original: basicInfo.guaCi,
+      translation: enhancedInfo?.guaCi?.translation || "暂无现代翻译",
+      interpretation: enhancedInfo?.guaCi?.interpretation || "暂无基础解释"
+    },
+    yaoCi: enhancedInfo?.yaoCi || [],
+    structure: enhancedInfo?.structure || {
+      upperTrigram: "未知",
+      lowerTrigram: "未知",
+      symbol: "暂无象征说明"
+    },
+    references: enhancedInfo?.references || [],
+    lastUpdated: enhancedInfo?.lastUpdated || new Date().toISOString(),
+    version: enhancedInfo?.version || "v1.0.0",
+    notes: enhancedInfo?.notes
+  };
+};
+
+/**
+ * 获取卦象的出处信息
+ * @param hexagramKey 卦象的二进制key
+ * @returns 出处信息
+ */
+export const getHexagramSource = (hexagramKey: string): string | undefined => {
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
+  if (!enhancedInfo?.source) return undefined;
+
+  const { book, chapter, position } = enhancedInfo.source;
+  return `${book} - ${chapter}（第${position}卦）`;
+};
+
+/**
+ * 获取卦象的结构信息
+ * @param hexagramKey 卦象的二进制key
+ * @returns 结构信息
+ */
+export const getHexagramStructure = (hexagramKey: string): string | undefined => {
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
+  return enhancedInfo?.structure?.symbol;
+};
+
+/**
+ * 生成随机加载提示
+ * @returns 随机的加载提示信息
+ */
+export const getRandomLoadingMessage = (): string => {
+  const randomIndex = Math.floor(Math.random() * LOADING_MESSAGES.length);
+  return LOADING_MESSAGES[randomIndex];
+};
+
+/**
+ * 生成随机解读贴士
+ * @returns 随机的解读贴士
+ */
+export const getRandomInterpretationTip = (): string => {
+  const randomIndex = Math.floor(Math.random() * INTERPRETATION_TIPS.length);
+  return INTERPRETATION_TIPS[randomIndex];
+};
+
+/**
+ * 根据占卜类型获取爻辞引导
+ * @param hexagramKey 卦象key
+ * @param yaoPosition 爻位 (0-5)
+ * @param category 占卜类型
+ * @returns 对应类别的引导文本
+ */
+export const getCategoryGuidance = (
+  hexagramKey: string,
+  yaoPosition: number,
+  category: DivinationCategory
+): string => {
+  const enhancedInfo = HEXAGRAM_ENHANCED_INFO[hexagramKey];
+  const yaoCi = enhancedInfo?.yaoCi?.[yaoPosition];
+
+  if (!yaoCi?.categoryGuidance) {
+    // 如果没有具体的引导信息，返回通用引导
+    return yaoCi?.categoryGuidance?.general || "请结合具体问题来理解此爻的含义";
+  }
+
+  return yaoCi.categoryGuidance[category] || yaoCi.categoryGuidance.general;
+};
+
+/**
+ * 创建解读状态
+ * @param stage 当前阶段
+ * @param progress 进度百分比（可选）
+ * @returns 解读状态对象
+ */
+export const createInterpretationState = (
+  stage: InterpretationState['stage'],
+  progress?: number
+): InterpretationState => {
+  return {
+    stage,
+    message: getRandomLoadingMessage(),
+    progress,
+    tips: [getRandomInterpretationTip()]
+  };
+};
+
+/**
+ * 获取基础卦象分类引导（通用版本）
+ * @param hexagramName 卦名
+ * @param category 占卜类型
+ * @returns 通用引导文本
+ */
+export const getBasicCategoryGuidance = (
+  hexagramName: string,
+  category: DivinationCategory
+): string => {
+  const guidanceMap: Record<DivinationCategory, string> = {
+    career: `关于${hexagramName}卦，此卦象对您的事业发展提供了重要指引，建议您结合当前的工作状况来理解其深层含义。`,
+    finance: `关于${hexagramName}卦，此卦象与财运相关，提醒您在财务决策上需要谨慎考虑，遵循卦象的智慧指导。`,
+    relationship: `关于${hexagramName}卦，此卦象揭示了人际关系或感情状况的发展趋势，建议您用心体会其中的情感智慧。`,
+    health: `关于${hexagramName}卦，此卦象与健康养生有关，提醒您关注身体信号，顺应自然规律来调养身心。`,
+    general: `关于${hexagramName}卦，此卦象蕴含着深刻的人生哲理，建议您静心思考，将其智慧应用到实际生活中。`
+  };
+
+  return guidanceMap[category] || guidanceMap.general;
 };
