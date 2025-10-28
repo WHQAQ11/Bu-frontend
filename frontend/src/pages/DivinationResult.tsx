@@ -221,21 +221,7 @@ ${errorMessage}
     }
   };
 
-  // 获取卦象含义
-  const getHexagramMeaning = (name: string): string => {
-    const meanings: { [key: string]: string } = {
-      乾: "刚健中正，积极进取",
-      坤: "柔顺包容，厚德载物",
-      屯: "初生之难，需要耐心",
-      蒙: "启蒙教育，需要引导",
-      需: "等待时机，积蓄力量",
-      讼: "争议纠纷，需要谨慎",
-      师: "军队行动，需要纪律",
-      比: "亲密关系，需要和谐",
-    };
-    return meanings[name] || "变化与机遇";
-  };
-
+  
   // 获取分类名称
   const getCategoryName = (categoryId?: string): string => {
     const categories: { [key: string]: string } = {
