@@ -331,6 +331,36 @@ export const BaguaDiagram: React.FC<TrigramSymbolProps> = ({
   );
 };
 
+// 小尺寸八卦图标组件（专用于按钮）- 只包含太极阴阳鱼部分
+export const SmallBaguaIcon: React.FC<{
+  className?: string;
+  animate?: boolean;
+}> = ({ className = "", animate = true }) => {
+  return (
+    <div
+      className={`w-8 h-8 ${className} ${animate ? "animate-spin-slow" : ""}`}
+      title="太极"
+    >
+      <svg viewBox="0 0 100 100" className="w-full h-full">
+        {/* 太极背景圆 */}
+        <circle cx="50" cy="50" r="48" fill="white" stroke="black" strokeWidth="1" />
+
+        {/* S形分割 - 太极阴阳 */}
+        <path
+          d="M 50,2 A 48,48 0 0 1 50,98 A 24,24 0 0 0 50,50 A 24,24 0 0 1 50,2"
+          fill="black"
+        />
+
+        {/* 白色鱼眼 */}
+        <circle cx="50" cy="26" r="8" fill="white" />
+
+        {/* 黑色鱼眼 */}
+        <circle cx="50" cy="74" r="8" fill="black" />
+      </svg>
+    </div>
+  );
+};
+
 // 神秘光环组件
 export const MysticalAura: React.FC<{
   children: React.ReactNode;

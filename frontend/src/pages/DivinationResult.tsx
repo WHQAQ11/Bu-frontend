@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Stars, MysticalAura } from "@/components/ui/TrigramSymbol";
 import { ClassicBaguaDiagram } from "@/components/ui/ClassicBagua";
+import { DivinationService } from "@/services/divination";
+import { AIInterpretationRequest } from "@/types/divination";
 
 interface DivinationResult {
   method: string;
@@ -161,39 +163,59 @@ const DivinationResult: React.FC = () => {
     setIsGettingAIInterpretation(true);
 
     try {
-      // 模拟AI API调用
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // 构建请求数据（匹配后端接口格式）
+      const requestData: AIInterpretationRequest = {
+        method: result.method,
+        question: result.question,
+        hexagram_name: result.result.name,
+        hexagram_info: {
+          upperTrigram: result.result.upperTrigram,
+          lowerTrigram: result.result.lowerTrigram,
+          changingYao: result.result.changingYao,
+          interpretation: {
+            guaci: result.result.interpretation.guaci,
+            yaoci: result.result.interpretation.yaoci,
+            shiyi: result.result.interpretation.shiyi,
+            analysis: result.result.interpretation.analysis,
+          },
+        },
+        // 可选参数，根据用户问题类型设置
+        focus: category as any || 'general',
+        style: 'detailed',
+        language: 'chinese',
+      };
 
-      // 模拟AI解读结果
-      const aiInterpretation = `
-基于您的"${result.question}"问题，以及所得的${result.result.name}卦象，AI为您解读：
+      // 调用真实的AI解析API
+      const response = await DivinationService.getAIInterpretation(requestData);
 
-📊 **卦象分析**
-${result.result.name}卦（第${result.result.number}卦），上${result.result.upperTrigram}下${result.result.lowerTrigram}${result.result.changingYao ? `，第${result.result.changingYao}爻为动爻` : ""}。此卦象征着${getHexagramMeaning(result.result.name)}。
+      if (response.success) {
+        setResult({ ...result, aiInterpretation: response.data.ai_interpretation });
+      } else {
+        throw new Error(response.message || "AI解析失败");
+      }
+    } catch (error: any) {
+      console.error("获取AI解读失败:", error);
 
-🎯 **问题相关解读**
-针对您关于${getCategoryName(category)}的问题，此卦象预示着：
-- 短期内需要保持谨慎和耐心
-- 中期有机会获得突破性进展
-- 长期发展前景积极，但需要持续努力
+      // 显示错误信息给用户
+      const errorMessage = error.message || "获取AI解析失败，请稍后重试";
 
-💡 **行动建议**
-1. 保持内心平静，避免冲动决策
-2. 积极准备，等待最佳时机
-3. 寻求有经验人士的建议和指导
-4. 制定详细的计划和备选方案
+      // 可以选择设置一个错误状态的解读
+      const errorInterpretation = `
+❌ **AI解析暂时不可用**
 
-⚠️ **注意事项**
-- 此预测仅供参考，实际决策需结合具体情况
-- 保持积极心态，相信自己的判断能力
-- 重要决定建议咨询专业人士
+抱歉，在处理您的"${result.question}"问题时遇到了问题：
 
-祝您好运！🌟
+${errorMessage}
+
+🔄 **建议您**
+1. 稍后重试
+2. 检查网络连接
+3. 如果问题持续存在，请联系客服
+
+您可以参考下方传统的卦辞解读获得指引。
       `;
 
-      setResult({ ...result, aiInterpretation });
-    } catch (error) {
-      console.error("获取AI解读失败:", error);
+      setResult({ ...result, aiInterpretation: errorInterpretation });
     } finally {
       setIsGettingAIInterpretation(false);
     }

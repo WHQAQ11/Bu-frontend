@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/Project/Bu_backend/Bu-backend/src/routes/**)",
+      "Read(//d/Project/Bu_backend/Bu-backend/src/models/**)",
+      "Read(//d/Project/Bu_backend/Bu-backend/src/middleware/**)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

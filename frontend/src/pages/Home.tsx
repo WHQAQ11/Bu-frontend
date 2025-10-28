@@ -5,6 +5,7 @@ import {
   BaGua,
   Stars,
   MysticalAura,
+  SmallBaguaIcon,
 } from "@/components/ui/TrigramSymbol";
 import { ClassicBaguaDiagram } from "@/components/ui/ClassicBagua";
 
@@ -140,7 +141,7 @@ const Home: React.FC = () => {
               `}
             >
               <span>获取今日指引</span>
-              <TaiJi size="sm" className={isHovered ? "animate-spin" : ""} />
+              <SmallBaguaIcon className={isHovered ? "animate-spin" : ""} />
             </Link>
           </div>
 
